@@ -857,26 +857,43 @@
         return;
       }
 
-      // NOTE: In production, send paymentMethod.id + plan + customer info
-      // to your backend to create a PaymentIntent and confirm it.
-      // For now, simulate success to demonstrate the flow.
-      console.log('Payment method created:', paymentMethod.id);
-      console.log('Plan:', selectedPlan, '| Customer:', firstName, lastName, email);
+      // Send to backend
+      const API_URL = window.location.hostname === 'localhost'
+        ? 'http://localhost:3000/api/checkout'
+        : 'https://apex-automations.vercel.app/api/checkout';
 
-      // TODO: Replace with actual backend call:
-      // const res = await fetch('/api/checkout', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify({ paymentMethodId: paymentMethod.id, plan: selectedPlan, email, name: firstName + ' ' + lastName, phone, business })
-      // });
-      // const data = await res.json();
-      // if (data.error) { showError(data.error); setLoading(false); return; }
+      try {
+        const response = await fetch(API_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            paymentMethodId: paymentMethod.id,
+            plan: selectedPlan,
+            email,
+            name: `${firstName} ${lastName}`,
+            phone,
+            business,
+          })
+        });
 
-      // Show success
-      setLoading(false);
-      document.getElementById('checkoutLayout').style.display = 'none';
-      document.getElementById('successScreen').classList.add('visible');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+        const data = await response.json();
+
+        if (data.error) {
+          showError(data.error);
+          setLoading(false);
+          return;
+        }
+
+        // Show success
+        setLoading(false);
+        document.getElementById('checkoutLayout').style.display = 'none';
+        document.getElementById('successScreen').classList.add('visible');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      } catch (err) {
+        showError('Something went wrong. Please try again or contact us.');
+        setLoading(false);
+      }
     });
 
     function showError(msg) {

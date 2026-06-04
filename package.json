@@ -1,0 +1,9 @@
+{
+  "name": "apex-automations",
+  "version": "1.0.0",
+  "description": "Apex Automations — backend API",
+  "main": "api/checkout.js",
+  "dependencies": {
+    "stripe": "^14.0.0"
+  }
+}
