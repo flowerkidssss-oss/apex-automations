@@ -3,1320 +3,1840 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Apex Automations — We automate the follow-up. You keep the customers.</title>
+  <title>Apex Automations — Your Shop Runs. Your Leads Don't Wait.</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <style>
-    *, *::before, *::after {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
+    /* ===== RESET & BASE ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --bg:        #0a0a0a;
-      --card:      #111111;
-      --card-hover:#161616;
-      --border:    #1e1e1e;
-      --gold:      #e8c547;
-      --gold-dim:  #c9a930;
-      --gold-glow: rgba(232,197,71,0.18);
-      --text:      #f0f0f0;
-      --muted:     #888888;
-      --radius:    12px;
-      --transition: 0.25s ease;
+      --black: #050508;
+      --black-2: #0a0a10;
+      --black-3: #111118;
+      --gold: #e8c547;
+      --gold-dim: #c9a93a;
+      --gold-glow: rgba(232, 197, 71, 0.25);
+      --white: #ffffff;
+      --white-70: rgba(255,255,255,0.70);
+      --white-40: rgba(255,255,255,0.40);
+      --white-15: rgba(255,255,255,0.15);
+      --white-08: rgba(255,255,255,0.08);
+      --white-05: rgba(255,255,255,0.05);
+      --glow-blue: rgba(100, 120, 255, 0.18);
+      --glow-purple: rgba(160, 80, 255, 0.12);
+      --glass-bg: rgba(255,255,255,0.06);
+      --glass-border: rgba(255,255,255,0.12);
+      --radius: 20px;
+      --radius-sm: 12px;
+      --radius-xs: 8px;
     }
-
     html { scroll-behavior: smooth; }
-
     body {
-      font-family: 'Inter', sans-serif;
-      background: var(--bg);
-      color: var(--text);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--black);
+      color: var(--white);
       line-height: 1.6;
+      overflow-x: hidden;
       -webkit-font-smoothing: antialiased;
     }
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; display: block; }
+    button { cursor: pointer; border: none; outline: none; font-family: inherit; }
 
-    /* ─── NAV ─────────────────────────────────────────────── */
+    /* ===== SCROLL ANIMATIONS ===== */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(32px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .fade-in-delay-1 { transition-delay: 0.1s; }
+    .fade-in-delay-2 { transition-delay: 0.2s; }
+    .fade-in-delay-3 { transition-delay: 0.3s; }
+    .fade-in-delay-4 { transition-delay: 0.4s; }
+
+    /* ===== NAV ===== */
     nav {
       position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 100;
-      background: rgba(10,10,10,0.85);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
-      padding: 0 2rem;
-      height: 64px;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      padding: 0 40px;
+      height: 68px;
       display: flex;
       align-items: center;
       justify-content: space-between;
+      background: rgba(5, 5, 8, 0.75);
+      backdrop-filter: blur(24px) saturate(1.8);
+      -webkit-backdrop-filter: blur(24px) saturate(1.8);
+      border-bottom: 1px solid var(--glass-border);
     }
-
     .nav-logo {
-      font-size: 1.2rem;
+      font-size: 1.1rem;
       font-weight: 800;
       letter-spacing: -0.02em;
-      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
-
-    .nav-logo span { color: var(--gold); }
-
-    .nav-cta {
-      background: var(--gold);
-      color: #0a0a0a;
-      font-weight: 700;
-      font-size: 0.85rem;
-      padding: 0.5rem 1.25rem;
-      border-radius: 6px;
-      text-decoration: none;
-      letter-spacing: 0.01em;
-      transition: background var(--transition), transform var(--transition);
-    }
-
-    .nav-cta:hover {
-      background: var(--gold-dim);
-      transform: translateY(-1px);
-    }
-
-    /* ─── SECTIONS ────────────────────────────────────────── */
-    section {
-      padding: 6rem 2rem;
-    }
-
-    .container {
-      max-width: 1100px;
-      margin: 0 auto;
-    }
-
-    .section-label {
-      font-size: 0.75rem;
-      font-weight: 700;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 1rem;
-    }
-
-    h2 {
-      font-size: clamp(1.75rem, 3.5vw, 2.6rem);
-      font-weight: 800;
-      letter-spacing: -0.03em;
-      line-height: 1.2;
-      margin-bottom: 1rem;
-    }
-
-    .section-sub {
-      font-size: 1.05rem;
-      color: var(--muted);
-      max-width: 560px;
-      margin-bottom: 3.5rem;
-    }
-
-    /* ─── HERO ────────────────────────────────────────────── */
-    #hero {
-      min-height: 100vh;
+    .nav-logo-icon {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, var(--gold), #f5d878);
+      border-radius: 8px;
       display: flex;
       align-items: center;
       justify-content: center;
-      text-align: center;
-      padding-top: 64px;
+      font-size: 0.85rem;
+      font-weight: 900;
+      color: var(--black);
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      list-style: none;
+    }
+    .nav-links a {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--white-70);
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--white); }
+    .nav-cta {
+      background: var(--gold);
+      color: var(--black);
+      font-size: 0.875rem;
+      font-weight: 700;
+      padding: 10px 22px;
+      border-radius: 100px;
+      transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+      letter-spacing: -0.01em;
+    }
+    .nav-cta:hover {
+      background: #f5d878;
+      transform: translateY(-1px);
+      box-shadow: 0 8px 24px var(--gold-glow);
+    }
+    .nav-mobile-toggle {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      background: none;
+      padding: 4px;
+    }
+    .nav-mobile-toggle span {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background: var(--white);
+      border-radius: 2px;
+      transition: all 0.3s;
+    }
+
+    /* ===== HERO ===== */
+    .hero {
       position: relative;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 120px 24px 80px;
       overflow: hidden;
     }
-
-    #hero::before {
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background-image: url('https://images.unsplash.com/photo-1607860108855-64acf2078ed9?w=1600');
+      background-size: cover;
+      background-position: center 40%;
+      background-repeat: no-repeat;
+    }
+    .hero-bg::after {
       content: '';
       position: absolute;
-      top: -200px; left: 50%;
-      transform: translateX(-50%);
-      width: 900px; height: 600px;
-      background: radial-gradient(ellipse at center, rgba(232,197,71,0.10) 0%, transparent 70%);
+      inset: 0;
+      background: linear-gradient(
+        180deg,
+        rgba(5,5,8,0.55) 0%,
+        rgba(5,5,8,0.45) 40%,
+        rgba(5,5,8,0.80) 75%,
+        rgba(5,5,8,1) 100%
+      );
+    }
+    .hero-glow {
+      position: absolute;
+      width: 700px;
+      height: 700px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(100, 120, 255, 0.14) 0%, transparent 70%);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -60%);
       pointer-events: none;
     }
-
-    .hero-inner {
+    .hero-content {
       position: relative;
-      z-index: 1;
+      z-index: 2;
       max-width: 820px;
     }
-
-    .hero-badge {
+    .hero-eyebrow {
       display: inline-flex;
       align-items: center;
-      gap: 0.5rem;
-      background: var(--gold-glow);
-      border: 1px solid rgba(232,197,71,0.3);
-      color: var(--gold);
+      gap: 8px;
+      background: var(--white-08);
+      border: 1px solid var(--glass-border);
+      border-radius: 100px;
+      padding: 6px 16px;
       font-size: 0.78rem;
       font-weight: 600;
-      letter-spacing: 0.08em;
+      color: var(--gold);
+      letter-spacing: 0.06em;
       text-transform: uppercase;
-      padding: 0.4rem 1rem;
-      border-radius: 100px;
-      margin-bottom: 2rem;
+      margin-bottom: 28px;
+      backdrop-filter: blur(8px);
     }
-
-    .hero-badge::before {
-      content: '⚡';
-      font-size: 0.9em;
+    .hero-eyebrow::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      background: var(--gold);
+      border-radius: 50%;
+      animation: pulse-dot 2s infinite;
     }
-
-    #hero h1 {
-      font-size: clamp(2.8rem, 6vw, 5rem);
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.7); }
+    }
+    .hero h1 {
+      font-size: clamp(2.8rem, 7vw, 5.2rem);
       font-weight: 900;
       letter-spacing: -0.04em;
       line-height: 1.05;
-      margin-bottom: 1rem;
+      margin-bottom: 24px;
+      background: linear-gradient(160deg, #ffffff 30%, rgba(255,255,255,0.70) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
-
-    #hero h1 span { color: var(--gold); }
-
-    .hero-tagline {
-      font-size: clamp(1.1rem, 2.2vw, 1.4rem);
-      font-weight: 600;
-      color: var(--gold);
-      margin-bottom: 1.5rem;
-      letter-spacing: -0.01em;
+    .hero h1 .accent {
+      background: linear-gradient(135deg, var(--gold), #f5e28a);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
-
     .hero-sub {
-      font-size: clamp(0.95rem, 1.5vw, 1.1rem);
-      color: var(--muted);
-      max-width: 620px;
-      margin: 0 auto 2.5rem;
-      line-height: 1.7;
+      font-size: clamp(1rem, 2vw, 1.2rem);
+      color: var(--white-70);
+      max-width: 580px;
+      margin: 0 auto 40px;
+      font-weight: 400;
+      line-height: 1.65;
     }
-
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
     .btn-primary {
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
       background: var(--gold);
-      color: #0a0a0a;
-      font-weight: 800;
+      color: var(--black);
       font-size: 1rem;
-      padding: 0.9rem 2.2rem;
-      border-radius: 8px;
-      text-decoration: none;
-      letter-spacing: 0.01em;
-      transition: background var(--transition), transform var(--transition), box-shadow var(--transition);
-      border: none;
-      cursor: pointer;
+      font-weight: 800;
+      padding: 16px 36px;
+      border-radius: 100px;
+      letter-spacing: -0.02em;
+      transition: background 0.2s, transform 0.2s, box-shadow 0.3s;
+      box-shadow: 0 0 0 0 var(--gold-glow);
     }
-
     .btn-primary:hover {
-      background: var(--gold-dim);
+      background: #f5d878;
       transform: translateY(-2px);
-      box-shadow: 0 8px 30px rgba(232,197,71,0.25);
+      box-shadow: 0 12px 36px rgba(232,197,71,0.4);
     }
-
+    .btn-ghost {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--white-08);
+      border: 1px solid var(--glass-border);
+      color: var(--white);
+      font-size: 1rem;
+      font-weight: 600;
+      padding: 16px 32px;
+      border-radius: 100px;
+      backdrop-filter: blur(8px);
+      transition: background 0.2s, transform 0.2s;
+    }
+    .btn-ghost:hover {
+      background: var(--white-15);
+      transform: translateY(-2px);
+    }
     .hero-trust {
-      margin-top: 3rem;
-      font-size: 0.82rem;
-      color: #555;
+      position: relative;
+      z-index: 2;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 0.4rem;
+      gap: 32px;
+      margin-top: 56px;
+      flex-wrap: wrap;
     }
-
-    .hero-trust span { color: var(--gold); font-size: 1em; }
-
-    /* ─── PROBLEM ─────────────────────────────────────────── */
-    #problem { background: #0d0d0d; }
-
-    .cards-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 1.5rem;
+    .trust-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--white-70);
     }
-
-    .card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 2rem;
-      transition: background var(--transition), border-color var(--transition), transform var(--transition);
-    }
-
-    .card:hover {
-      background: var(--card-hover);
-      border-color: rgba(232,197,71,0.35);
-      transform: translateY(-4px);
-    }
-
-    .card-icon {
-      width: 48px; height: 48px;
-      border-radius: 10px;
-      background: var(--gold-glow);
-      border: 1px solid rgba(232,197,71,0.25);
+    .trust-icon {
+      width: 28px;
+      height: 28px;
+      background: var(--white-08);
+      border: 1px solid var(--glass-border);
+      border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.4rem;
-      margin-bottom: 1.25rem;
+      font-size: 0.75rem;
+    }
+    .trust-divider {
+      width: 1px;
+      height: 20px;
+      background: var(--white-15);
     }
 
-    .card h3 {
-      font-size: 1.05rem;
-      font-weight: 700;
-      margin-bottom: 0.6rem;
+    /* ===== SOCIAL PROOF BAR ===== */
+    .proof-bar {
+      background: var(--glass-bg);
+      border-top: 1px solid var(--glass-border);
+      border-bottom: 1px solid var(--glass-border);
+      padding: 18px 0;
+      overflow: hidden;
+    }
+    .proof-track {
+      display: flex;
+      align-items: center;
+      gap: 60px;
+      animation: marquee 28s linear infinite;
+      white-space: nowrap;
+      width: max-content;
+    }
+    .proof-track:hover { animation-play-state: paused; }
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+    .proof-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--white-70);
       letter-spacing: -0.01em;
     }
+    .proof-item .dot {
+      width: 6px;
+      height: 6px;
+      background: var(--gold);
+      border-radius: 50%;
+    }
 
-    .card p {
-      font-size: 0.92rem;
-      color: var(--muted);
+    /* ===== SECTIONS SHARED ===== */
+    section { padding: 100px 24px; }
+    .container { max-width: 1100px; margin: 0 auto; }
+    .section-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 12px;
+      display: block;
+    }
+    .section-title {
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      margin-bottom: 16px;
+    }
+    .section-sub {
+      font-size: 1.05rem;
+      color: var(--white-70);
+      max-width: 520px;
       line-height: 1.65;
     }
 
-    /* ─── SOLUTION ────────────────────────────────────────── */
-    #solution { background: var(--bg); }
-
-    .solution-header {
-      text-align: center;
-      margin-bottom: 3.5rem;
+    /* ===== BACKGROUND GLOWS ===== */
+    .bg-glow-section {
+      position: relative;
+    }
+    .bg-glow-section::before {
+      content: '';
+      position: absolute;
+      width: 500px;
+      height: 500px;
+      border-radius: 50%;
+      background: radial-gradient(circle, var(--glow-blue) 0%, transparent 70%);
+      top: 50%;
+      left: -100px;
+      transform: translateY(-50%);
+      pointer-events: none;
+    }
+    .bg-glow-section::after {
+      content: '';
+      position: absolute;
+      width: 400px;
+      height: 400px;
+      border-radius: 50%;
+      background: radial-gradient(circle, var(--glow-purple) 0%, transparent 70%);
+      top: 50%;
+      right: -80px;
+      transform: translateY(-50%);
+      pointer-events: none;
     }
 
-    .solution-header .section-sub {
-      margin: 0.75rem auto 0;
-    }
-
-    .features-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 1.5rem;
-    }
-
-    .feature-card {
-      background: var(--card);
-      border: 1px solid var(--border);
+    /* ===== GLASS CARD ===== */
+    .glass-card {
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
       border-radius: var(--radius);
-      padding: 2rem;
-      text-align: center;
-      transition: background var(--transition), border-color var(--transition), transform var(--transition);
+      padding: 36px;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
     }
-
-    .feature-card:hover {
-      background: var(--card-hover);
-      border-color: rgba(232,197,71,0.35);
+    .glass-card:hover {
+      border-color: rgba(232,197,71,0.3);
       transform: translateY(-4px);
+      box-shadow: 0 20px 48px rgba(0,0,0,0.4), 0 0 40px rgba(232,197,71,0.06);
     }
 
-    .feature-icon {
+    /* ===== PROBLEM ===== */
+    .problem { background: var(--black-2); }
+    .problem-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 56px;
+    }
+    .problem-icon {
       font-size: 2rem;
-      margin-bottom: 1rem;
+      margin-bottom: 20px;
       display: block;
     }
-
-    .feature-card h3 {
-      font-size: 1rem;
+    .problem-card h3 {
+      font-size: 1.15rem;
       font-weight: 700;
-      margin-bottom: 0.5rem;
-      color: var(--text);
+      letter-spacing: -0.02em;
+      margin-bottom: 12px;
     }
-
-    .feature-card p {
-      font-size: 0.88rem;
-      color: var(--muted);
+    .problem-card p {
+      font-size: 0.9rem;
+      color: var(--white-70);
       line-height: 1.6;
     }
+    .problem-card .stat {
+      display: inline-block;
+      margin-top: 16px;
+      font-size: 1.8rem;
+      font-weight: 900;
+      color: var(--gold);
+      letter-spacing: -0.04em;
+    }
 
-    /* ─── ROI CALCULATOR ──────────────────────────────────── */
-    #roi { background: #0d0d0d; }
-
-    .roi-wrap {
+    /* ===== SOLUTION ===== */
+    .solution-inner {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 3rem;
+      gap: 80px;
       align-items: center;
     }
+    .solution-features {
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+    .feature-item {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+    .feature-icon {
+      width: 42px;
+      height: 42px;
+      min-width: 42px;
+      background: linear-gradient(135deg, rgba(232,197,71,0.2), rgba(232,197,71,0.05));
+      border: 1px solid rgba(232,197,71,0.25);
+      border-radius: var(--radius-xs);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+    }
+    .feature-text h4 {
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 4px;
+    }
+    .feature-text p {
+      font-size: 0.875rem;
+      color: var(--white-70);
+      line-height: 1.55;
+    }
 
-    .roi-inputs { display: flex; flex-direction: column; gap: 1.75rem; }
+    /* ===== PHONE MOCKUP ===== */
+    .phone-wrap {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .phone {
+      width: 280px;
+      background: #0d0d14;
+      border-radius: 44px;
+      border: 2px solid rgba(255,255,255,0.15);
+      padding: 16px 12px;
+      box-shadow:
+        0 0 0 6px rgba(255,255,255,0.04),
+        0 40px 80px rgba(0,0,0,0.7),
+        0 0 60px rgba(100,120,255,0.1);
+      position: relative;
+    }
+    .phone::before {
+      content: '';
+      position: absolute;
+      top: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 6px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 100px;
+    }
+    .phone-screen {
+      background: #1c1c1e;
+      border-radius: 32px;
+      overflow: hidden;
+      padding-top: 28px;
+    }
+    .phone-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .phone-avatar {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, var(--gold), #c9a93a);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 800;
+      color: var(--black);
+    }
+    .phone-contact {
+      flex: 1;
+    }
+    .phone-contact-name {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--white);
+    }
+    .phone-contact-status {
+      font-size: 0.65rem;
+      color: #30d158;
+    }
+    .phone-messages {
+      padding: 16px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .msg {
+      max-width: 85%;
+      padding: 10px 14px;
+      border-radius: 18px;
+      font-size: 0.72rem;
+      line-height: 1.4;
+    }
+    .msg-in {
+      background: #2c2c2e;
+      color: var(--white);
+      align-self: flex-start;
+      border-bottom-left-radius: 4px;
+    }
+    .msg-out {
+      background: var(--gold);
+      color: var(--black);
+      align-self: flex-end;
+      border-bottom-right-radius: 4px;
+      font-weight: 600;
+    }
+    .msg-time {
+      font-size: 0.6rem;
+      color: rgba(255,255,255,0.35);
+      text-align: center;
+      margin: 4px 0;
+    }
+    .msg-typing {
+      background: #2c2c2e;
+      align-self: flex-start;
+      padding: 12px 16px;
+      border-radius: 18px;
+      border-bottom-left-radius: 4px;
+      display: flex;
+      gap: 4px;
+      align-items: center;
+    }
+    .typing-dot {
+      width: 5px;
+      height: 5px;
+      background: rgba(255,255,255,0.4);
+      border-radius: 50%;
+      animation: typing 1.2s infinite;
+    }
+    .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+    .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes typing {
+      0%, 60%, 100% { opacity: 0.3; transform: translateY(0); }
+      30% { opacity: 1; transform: translateY(-3px); }
+    }
 
-    .roi-input-group label {
+    /* ===== ROI CALCULATOR ===== */
+    .roi { background: var(--black-2); }
+    .roi-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: start;
+    }
+    .roi-controls {
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+    .slider-group label {
       display: flex;
       justify-content: space-between;
-      font-size: 0.85rem;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .slider-group label span:first-child {
+      font-size: 0.9rem;
       font-weight: 600;
-      color: var(--muted);
-      margin-bottom: 0.6rem;
+      color: var(--white-70);
     }
-
-    .roi-input-group label span {
+    .slider-group label span:last-child {
+      font-size: 1rem;
+      font-weight: 700;
       color: var(--gold);
-      font-weight: 700;
     }
-
-    .roi-slider {
+    input[type="range"] {
       -webkit-appearance: none;
-      appearance: none;
       width: 100%;
-      height: 4px;
-      border-radius: 2px;
-      background: var(--border);
+      height: 5px;
+      background: var(--white-15);
+      border-radius: 100px;
       outline: none;
-      cursor: pointer;
     }
-
-    .roi-slider::-webkit-slider-thumb {
+    input[type="range"]::-webkit-slider-thumb {
       -webkit-appearance: none;
-      appearance: none;
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
+      width: 22px;
+      height: 22px;
       background: var(--gold);
-      cursor: pointer;
-      border: 2px solid #0a0a0a;
-      box-shadow: 0 0 0 3px rgba(232,197,71,0.2);
-    }
-
-    .roi-slider::-moz-range-thumb {
-      width: 20px;
-      height: 20px;
       border-radius: 50%;
-      background: var(--gold);
       cursor: pointer;
-      border: 2px solid #0a0a0a;
+      box-shadow: 0 0 12px rgba(232,197,71,0.5);
+      transition: transform 0.15s;
     }
-
+    input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
     .roi-result {
-      background: var(--card);
+      background: linear-gradient(135deg, rgba(232,197,71,0.12), rgba(232,197,71,0.04));
       border: 1px solid rgba(232,197,71,0.3);
-      border-radius: 16px;
-      padding: 2.5rem;
+      border-radius: var(--radius);
+      padding: 40px;
       text-align: center;
+      position: sticky;
+      top: 100px;
     }
-
     .roi-result-label {
-      font-size: 0.78rem;
+      font-size: 0.75rem;
       font-weight: 700;
-      letter-spacing: 0.12em;
+      letter-spacing: 0.1em;
       text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 0.5rem;
+      color: var(--gold);
+      margin-bottom: 16px;
+      display: block;
     }
-
-    .roi-result-amount {
-      font-size: clamp(2.5rem, 5vw, 4rem);
+    .roi-amount {
+      font-size: 3.5rem;
       font-weight: 900;
       letter-spacing: -0.04em;
       color: var(--gold);
       line-height: 1;
-      margin-bottom: 0.5rem;
+      margin-bottom: 8px;
     }
-
-    .roi-result-sub {
-      font-size: 0.88rem;
-      color: var(--muted);
-      margin-bottom: 2rem;
-      line-height: 1.6;
+    .roi-desc {
+      font-size: 0.85rem;
+      color: var(--white-70);
+      margin-bottom: 32px;
     }
-
     .roi-breakdown {
       display: flex;
       flex-direction: column;
-      gap: 0.6rem;
-      margin-bottom: 2rem;
+      gap: 12px;
       text-align: left;
     }
-
     .roi-row {
       display: flex;
       justify-content: space-between;
+      align-items: center;
       font-size: 0.85rem;
-      padding: 0.4rem 0;
-      border-bottom: 1px solid var(--border);
+      padding: 10px 0;
+      border-bottom: 1px solid var(--white-08);
     }
-
     .roi-row:last-child { border-bottom: none; }
-    .roi-row .roi-val { color: var(--gold); font-weight: 700; }
+    .roi-row span:first-child { color: var(--white-70); }
+    .roi-row span:last-child { font-weight: 700; }
 
-    /* ─── COMPARISON TABLE ────────────────────────────────── */
-    #compare { background: var(--bg); }
-
-    .compare-table {
+    /* ===== COMPARISON TABLE ===== */
+    .comparison { background: var(--black-3); }
+    .table-wrap {
+      overflow-x: auto;
+      margin-top: 56px;
+      border-radius: var(--radius);
+      border: 1px solid var(--glass-border);
+      background: var(--glass-bg);
+      backdrop-filter: blur(20px);
+    }
+    table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 1rem;
+      min-width: 600px;
     }
-
-    .compare-table th {
-      padding: 1rem 1.25rem;
-      font-size: 0.82rem;
+    thead th {
+      padding: 20px 24px;
+      text-align: center;
+      font-size: 0.85rem;
       font-weight: 700;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      border-bottom: 2px solid var(--border);
-      text-align: center;
+      border-bottom: 1px solid var(--glass-border);
+      white-space: nowrap;
     }
-
-    .compare-table th:first-child { text-align: left; }
-    .compare-table th.apex-col { color: var(--gold); border-bottom-color: var(--gold); }
-
-    .compare-table td {
-      padding: 0.9rem 1.25rem;
-      font-size: 0.9rem;
-      border-bottom: 1px solid var(--border);
-      text-align: center;
-      color: var(--muted);
-    }
-
-    .compare-table td:first-child {
-      text-align: left;
-      color: var(--text);
-      font-weight: 500;
-    }
-
-    .compare-table td.apex-col { background: rgba(232,197,71,0.04); }
-    .compare-table tr:last-child td { border-bottom: none; }
-
-    .check { color: var(--gold); font-size: 1.1rem; font-weight: 700; }
-    .cross { color: #444; font-size: 1.1rem; }
-    .partial { color: #888; font-size: 0.85rem; }
-
-    /* ─── TESTIMONIALS ────────────────────────────────────── */
-    #testimonials { background: #0d0d0d; }
-
-    .testimonials-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 1.5rem;
-    }
-
-    .testimonial-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 2rem;
-      transition: border-color var(--transition), transform var(--transition);
-    }
-
-    .testimonial-card:hover {
-      border-color: rgba(232,197,71,0.3);
-      transform: translateY(-3px);
-    }
-
-    .testimonial-stars {
+    thead th:first-child { text-align: left; color: var(--white-70); }
+    thead th.apex-col {
+      background: rgba(232,197,71,0.08);
       color: var(--gold);
-      font-size: 0.95rem;
-      margin-bottom: 1rem;
-      letter-spacing: 0.1em;
     }
+    tbody tr:not(:last-child) td { border-bottom: 1px solid var(--white-05); }
+    tbody td {
+      padding: 16px 24px;
+      font-size: 0.875rem;
+      text-align: center;
+      color: var(--white-70);
+    }
+    tbody td:first-child { text-align: left; font-weight: 500; color: var(--white); }
+    tbody td.apex-col { background: rgba(232,197,71,0.04); }
+    .check { color: #30d158; font-size: 1rem; font-weight: 700; }
+    .cross { color: #ff453a; font-size: 1rem; }
+    .partial { color: var(--gold); font-size: 0.8rem; font-weight: 600; }
 
-    .testimonial-quote {
-      font-size: 0.95rem;
-      line-height: 1.7;
-      color: #ddd;
-      margin-bottom: 1.5rem;
+    /* ===== TESTIMONIALS ===== */
+    .testimonials { background: var(--black-2); }
+    .testi-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 56px;
+    }
+    .testi-card { padding: 32px; }
+    .stars {
+      display: flex;
+      gap: 3px;
+      margin-bottom: 18px;
+    }
+    .star { color: var(--gold); font-size: 0.9rem; }
+    .testi-quote {
+      font-size: 0.925rem;
+      color: var(--white-70);
+      line-height: 1.65;
+      margin-bottom: 24px;
       font-style: italic;
     }
-
-    .testimonial-author {
+    .testi-quote::before { content: '"'; color: var(--gold); font-size: 1.4rem; font-style: normal; line-height: 0; position: relative; top: 4px; }
+    .testi-author {
       display: flex;
       align-items: center;
-      gap: 0.75rem;
+      gap: 12px;
     }
-
-    .testimonial-avatar {
+    .testi-avatar {
       width: 40px;
       height: 40px;
       border-radius: 50%;
-      background: var(--gold-glow);
-      border: 1px solid rgba(232,197,71,0.3);
+      background: linear-gradient(135deg, var(--gold), #c9a93a);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1rem;
-      flex-shrink: 0;
+      font-size: 0.8rem;
+      font-weight: 800;
+      color: var(--black);
     }
-
-    .testimonial-name {
-      font-size: 0.88rem;
+    .testi-name {
       font-weight: 700;
-      color: var(--text);
+      font-size: 0.875rem;
+    }
+    .testi-role {
+      font-size: 0.75rem;
+      color: var(--white-40);
     }
 
-    .testimonial-biz {
-      font-size: 0.78rem;
-      color: var(--muted);
-    }
-
-    /* ─── PRICING ─────────────────────────────────────────── */
-    #pricing {
-      background: var(--bg);
-      text-align: center;
-    }
-
-    #pricing h2 { text-align: center; }
-    #pricing .section-label { text-align: center; }
-
-    .pricing-single {
+    /* ===== PRICING ===== */
+    .pricing { background: var(--black-3); }
+    .pricing-inner {
       max-width: 560px;
-      margin: 0 auto;
+      margin: 56px auto 0;
     }
-
     .pricing-card {
-      background: var(--card);
-      border: 2px solid var(--gold);
-      border-radius: 16px;
-      padding: 3rem 2.5rem;
-      text-align: left;
+      background: linear-gradient(145deg, rgba(232,197,71,0.08), rgba(232,197,71,0.02));
+      border: 1px solid rgba(232,197,71,0.3);
+      border-radius: 28px;
+      padding: 48px;
+      text-align: center;
       position: relative;
-      background: linear-gradient(160deg, #161410 0%, #111 70%);
+      overflow: hidden;
     }
-
-    .pricing-badge {
+    .pricing-card::before {
+      content: '';
       position: absolute;
-      top: -14px;
-      left: 50%;
-      transform: translateX(-50%);
+      top: 0; left: 50%; transform: translateX(-50%);
+      width: 80%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    }
+    .pricing-badge {
+      display: inline-block;
       background: var(--gold);
-      color: #0a0a0a;
+      color: var(--black);
       font-size: 0.7rem;
       font-weight: 800;
       letter-spacing: 0.1em;
       text-transform: uppercase;
-      padding: 0.3rem 1rem;
+      padding: 5px 14px;
       border-radius: 100px;
-      white-space: nowrap;
+      margin-bottom: 24px;
     }
-
-    .pricing-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 2rem;
-      flex-wrap: wrap;
-      gap: 1rem;
-    }
-
     .pricing-name {
-      font-size: 1.4rem;
+      font-size: 1.6rem;
       font-weight: 800;
-      letter-spacing: -0.02em;
-      margin-bottom: 0.3rem;
+      letter-spacing: -0.03em;
+      margin-bottom: 8px;
     }
-
     .pricing-tagline {
-      font-size: 0.88rem;
-      color: var(--muted);
+      font-size: 0.875rem;
+      color: var(--white-70);
+      margin-bottom: 36px;
     }
-
-    .pricing-amounts {
-      text-align: right;
+    .pricing-amount {
+      margin-bottom: 8px;
     }
-
-    .pricing-setup {
-      font-size: 0.82rem;
-      color: var(--muted);
-      margin-bottom: 0.2rem;
-    }
-
-    .pricing-setup strong { color: var(--text); }
-
-    .pricing-monthly {
-      font-size: 2.2rem;
+    .price-monthly {
+      font-size: 4rem;
       font-weight: 900;
-      letter-spacing: -0.04em;
-      color: var(--gold);
-      line-height: 1;
+      letter-spacing: -0.05em;
+      color: var(--white);
     }
-
-    .pricing-monthly-label {
-      font-size: 0.8rem;
-      color: var(--muted);
+    .price-mo {
+      font-size: 1.2rem;
+      font-weight: 500;
+      color: var(--white-70);
     }
-
-    .pricing-divider {
-      height: 1px;
-      background: var(--border);
-      margin: 1.5rem 0;
-    }
-
-    .pricing-features {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 0.6rem 1.5rem;
-      margin-bottom: 2rem;
-    }
-
-    .pricing-features li {
-      list-style: none;
-      font-size: 0.88rem;
-      color: #ccc;
-      display: flex;
-      align-items: flex-start;
-      gap: 0.5rem;
-    }
-
-    .pricing-features li::before {
-      content: '✓';
-      color: var(--gold);
-      font-weight: 700;
-      flex-shrink: 0;
-    }
-
-    .pricing-total {
-      background: rgba(232,197,71,0.07);
-      border: 1px solid rgba(232,197,71,0.2);
-      border-radius: 8px;
-      padding: 0.9rem 1.25rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 1.5rem;
+    .price-setup {
       font-size: 0.9rem;
+      color: var(--white-70);
+      margin-bottom: 6px;
     }
-
-    .pricing-total-label { color: var(--muted); }
-    .pricing-total-val { color: var(--gold); font-weight: 800; font-size: 1rem; }
-
-    .pricing-card .btn-primary {
-      width: 100%;
-      text-align: center;
-      font-size: 1.05rem;
-      padding: 1rem;
+    .price-today {
+      display: inline-block;
+      background: rgba(232,197,71,0.15);
+      border: 1px solid rgba(232,197,71,0.3);
+      border-radius: 100px;
+      padding: 6px 18px;
+      font-size: 0.875rem;
+      font-weight: 700;
+      color: var(--gold);
+      margin-bottom: 36px;
     }
-
-    .pricing-note {
-      font-size: 0.82rem;
-      color: #555;
-      margin-top: 1rem;
-      text-align: center;
-    }
-
-    /* ─── FAQ ─────────────────────────────────────────────── */
-    #faq { background: var(--bg); }
-
-    .faq-list {
+    .pricing-features {
+      list-style: none;
+      text-align: left;
       display: flex;
       flex-direction: column;
-      gap: 1rem;
-      max-width: 720px;
+      gap: 12px;
+      margin-bottom: 36px;
     }
-
-    .faq-item {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      overflow: hidden;
-      transition: border-color var(--transition);
+    .pricing-features li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 0.9rem;
+      color: var(--white-70);
     }
-
-    .faq-item:hover {
-      border-color: rgba(232,197,71,0.3);
+    .pricing-features li .pf-check {
+      color: #30d158;
+      font-weight: 700;
+      font-size: 1rem;
+      margin-top: 1px;
     }
-
-    .faq-question {
+    .pricing-cta {
+      display: block;
       width: 100%;
-      background: none;
-      border: none;
-      text-align: left;
-      padding: 1.25rem 1.5rem;
-      font-family: 'Inter', sans-serif;
-      font-size: 0.97rem;
-      font-weight: 600;
-      color: var(--text);
-      cursor: pointer;
+      background: var(--gold);
+      color: var(--black);
+      font-size: 1.05rem;
+      font-weight: 800;
+      padding: 18px;
+      border-radius: 100px;
+      letter-spacing: -0.02em;
+      transition: background 0.2s, transform 0.2s, box-shadow 0.3s;
+      margin-bottom: 14px;
+    }
+    .pricing-cta:hover {
+      background: #f5d878;
+      transform: translateY(-2px);
+      box-shadow: 0 16px 40px rgba(232,197,71,0.35);
+    }
+    .pricing-fine {
+      font-size: 0.78rem;
+      color: var(--white-40);
+    }
+
+    /* ===== FAQ ===== */
+    .faq { background: var(--black-2); }
+    .faq-list {
+      max-width: 720px;
+      margin: 56px auto 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .faq-item {
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      transition: border-color 0.2s;
+    }
+    .faq-item.open { border-color: rgba(232,197,71,0.3); }
+    .faq-q {
+      width: 100%;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 1rem;
-      transition: color var(--transition);
+      padding: 22px 28px;
+      background: none;
+      color: var(--white);
+      font-size: 0.95rem;
+      font-weight: 600;
+      text-align: left;
+      cursor: pointer;
+      transition: color 0.2s;
+      gap: 16px;
     }
-
-    .faq-question:hover { color: var(--gold); }
-
-    .faq-question .faq-arrow {
+    .faq-item.open .faq-q { color: var(--gold); }
+    .faq-icon {
+      min-width: 24px;
+      width: 24px;
+      height: 24px;
+      border: 1px solid var(--glass-border);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+      transition: transform 0.3s, background 0.2s;
+    }
+    .faq-item.open .faq-icon {
+      transform: rotate(45deg);
+      background: rgba(232,197,71,0.15);
+      border-color: rgba(232,197,71,0.4);
       color: var(--gold);
-      font-size: 1.1rem;
-      flex-shrink: 0;
-      transition: transform var(--transition);
     }
-
-    .faq-item.open .faq-arrow {
-      transform: rotate(180deg);
-    }
-
-    .faq-answer {
+    .faq-a {
       max-height: 0;
       overflow: hidden;
-      transition: max-height 0.35s ease, padding 0.2s ease;
-      padding: 0 1.5rem;
-      font-size: 0.92rem;
-      color: var(--muted);
+      transition: max-height 0.35s ease, padding 0.3s ease;
+      font-size: 0.9rem;
+      color: var(--white-70);
       line-height: 1.7;
+      padding: 0 28px;
+    }
+    .faq-item.open .faq-a {
+      max-height: 300px;
+      padding: 0 28px 24px;
     }
 
-    .faq-item.open .faq-answer {
-      max-height: 200px;
-      padding: 0 1.5rem 1.25rem;
+    /* ===== CONTACT ===== */
+    .contact { background: var(--black-3); }
+    .contact-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
     }
-
-    /* ─── CTA / CONTACT ───────────────────────────────────── */
-    #contact {
-      background: #0d0d0d;
-      text-align: center;
+    .contact-info h2 { font-size: 2.2rem; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 16px; }
+    .contact-info p { font-size: 1rem; color: var(--white-70); line-height: 1.65; margin-bottom: 32px; }
+    .contact-detail {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.9rem;
+      color: var(--white-70);
+      margin-bottom: 12px;
     }
-
-    #contact .container {
-      max-width: 600px;
+    .contact-detail-icon {
+      width: 36px;
+      height: 36px;
+      background: var(--white-08);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-xs);
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
-
-    #contact h2 {
-      text-align: center;
-    }
-
-    #contact .section-label {
-      text-align: center;
-    }
-
-    #contact .section-sub {
-      margin: 0 auto 2.5rem;
-      text-align: center;
-    }
-
     .contact-form {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 2.5rem 2rem;
-      text-align: left;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
     }
-
     .form-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 1rem;
+      gap: 16px;
     }
-
     .form-group {
       display: flex;
       flex-direction: column;
-      margin-bottom: 1rem;
+      gap: 6px;
     }
-
     .form-group label {
       font-size: 0.8rem;
       font-weight: 600;
-      color: var(--muted);
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      margin-bottom: 0.4rem;
+      color: var(--white-70);
+      letter-spacing: 0.02em;
     }
-
-    .form-group input {
-      background: #0a0a0a;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 0.75rem 1rem;
-      color: var(--text);
-      font-family: 'Inter', sans-serif;
-      font-size: 0.95rem;
-      transition: border-color var(--transition), box-shadow var(--transition);
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      background: var(--white-05);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-xs);
+      padding: 13px 16px;
+      color: var(--white);
+      font-size: 0.9rem;
+      font-family: inherit;
       outline: none;
+      transition: border-color 0.2s, background 0.2s;
     }
-
-    .form-group input:focus {
-      border-color: var(--gold);
-      box-shadow: 0 0 0 3px rgba(232,197,71,0.12);
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      border-color: rgba(232,197,71,0.5);
+      background: rgba(232,197,71,0.04);
     }
-
-    .form-group input::placeholder { color: #444; }
-
+    .form-group textarea { resize: vertical; min-height: 100px; }
+    .form-group select option { background: #1a1a22; }
     .form-submit {
-      margin-top: 0.5rem;
-    }
-
-    .form-submit .btn-primary {
-      width: 100%;
-      font-size: 1rem;
-      padding: 1rem;
-      text-align: center;
-    }
-
-    .form-note {
-      text-align: center;
-      font-size: 0.8rem;
-      color: #555;
-      margin-top: 1rem;
-    }
-
-    /* ─── FOOTER ──────────────────────────────────────────── */
-    footer {
-      background: #050505;
-      border-top: 1px solid var(--border);
-      padding: 2rem;
-      text-align: center;
-      font-size: 0.85rem;
-      color: #444;
-    }
-
-    footer strong { color: var(--gold); }
-
-    /* ─── DIVIDER ─────────────────────────────────────────── */
-    .section-divider {
-      width: 48px;
-      height: 3px;
       background: var(--gold);
-      border-radius: 2px;
-      margin-bottom: 2rem;
+      color: var(--black);
+      font-size: 1rem;
+      font-weight: 800;
+      padding: 15px;
+      border-radius: 100px;
+      transition: background 0.2s, transform 0.2s, box-shadow 0.3s;
+      letter-spacing: -0.02em;
+    }
+    .form-submit:hover {
+      background: #f5d878;
+      transform: translateY(-2px);
+      box-shadow: 0 12px 32px rgba(232,197,71,0.3);
+    }
+    .form-success {
+      display: none;
+      text-align: center;
+      padding: 24px;
+      color: #30d158;
+      font-weight: 600;
     }
 
-    /* ─── RESPONSIVE ──────────────────────────────────────── */
-    @media (max-width: 640px) {
-      section { padding: 4rem 1.25rem; }
+    /* ===== FOOTER ===== */
+    footer {
+      background: var(--black);
+      border-top: 1px solid var(--glass-border);
+      padding: 48px 24px;
+    }
+    .footer-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 24px;
+    }
+    .footer-logo {
+      font-size: 1rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .footer-links {
+      display: flex;
+      gap: 28px;
+      list-style: none;
+      flex-wrap: wrap;
+    }
+    .footer-links a {
+      font-size: 0.85rem;
+      color: var(--white-40);
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--white-70); }
+    .footer-copy {
+      font-size: 0.8rem;
+      color: var(--white-40);
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 960px) {
+      .problem-grid { grid-template-columns: 1fr 1fr; }
+      .solution-inner { grid-template-columns: 1fr; gap: 48px; }
+      .phone-wrap { order: -1; }
+      .roi-inner { grid-template-columns: 1fr; }
+      .roi-result { position: relative; top: 0; }
+      .testi-grid { grid-template-columns: 1fr 1fr; }
+      .contact-inner { grid-template-columns: 1fr; gap: 48px; }
+    }
+    @media (max-width: 680px) {
+      nav { padding: 0 20px; }
+      .nav-links { display: none; }
+      .nav-mobile-toggle { display: flex; }
+      .problem-grid { grid-template-columns: 1fr; }
+      .testi-grid { grid-template-columns: 1fr; }
       .form-row { grid-template-columns: 1fr; }
-      nav { padding: 0 1.25rem; }
-      .nav-logo { font-size: 1rem; }
-      .roi-wrap { grid-template-columns: 1fr; }
-      .pricing-top { flex-direction: column; }
-      .pricing-amounts { text-align: left; }
-      .pricing-features { grid-template-columns: 1fr; }
-      .compare-table th, .compare-table td { padding: 0.6rem 0.75rem; font-size: 0.78rem; }
+      .hero-trust { flex-direction: column; gap: 16px; }
+      .trust-divider { display: none; }
+      .pricing-card { padding: 32px 24px; }
+      .glass-card { padding: 24px; }
+      section { padding: 72px 20px; }
     }
   </style>
 </head>
 <body>
 
-  <!-- ─── NAV ─── -->
-  <nav>
-    <div class="nav-logo">Apex<span>.</span></div>
-    <a href="#contact" class="nav-cta">Get a Free Demo</a>
-  </nav>
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">
+    <div class="nav-logo-icon">A</div>
+    Apex Automations
+  </div>
+  <ul class="nav-links">
+    <li><a href="#problem">Problem</a></li>
+    <li><a href="#solution">Solution</a></li>
+    <li><a href="#roi">ROI</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="checkout.html?plan=starter" class="nav-cta">Get Started — $347</a>
+  <button class="nav-mobile-toggle" aria-label="Menu" onclick="document.querySelector('.nav-links').style.display = document.querySelector('.nav-links').style.display === 'flex' ? 'none' : 'flex'">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
 
-  <!-- ─── HERO ─── -->
-  <section id="hero">
-    <div class="hero-inner">
-      <div class="hero-badge">For Auto Detailers &amp; Body Shops</div>
-      <h1>Apex <span>Automations</span></h1>
-      <p class="hero-tagline">We automate the follow-up. You keep the customers.</p>
-      <p class="hero-sub">
-        Stop losing leads to missed calls and slow follow-up. We install done-for-you
-        automation systems that respond instantly, follow up automatically, and fill your calendar.
-      </p>
-      <a href="#contact" class="btn-primary">Get a Free Demo</a>
-      <p class="hero-trust"><span>🔒</span> No contracts &middot; Live within 5–7 days &middot; Built for shops</p>
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-bg"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow fade-in">Done-for-you automation for auto detail shops</div>
+    <h1 class="fade-in fade-in-delay-1">Your Shop Runs.<br><span class="accent">Your Leads Don't Wait.</span></h1>
+    <p class="hero-sub fade-in fade-in-delay-2">We install a done-for-you automation system that texts back missed calls, follows up automatically, and fills your calendar. Live in 5–7 days.</p>
+    <div class="hero-actions fade-in fade-in-delay-3">
+      <a href="checkout.html?plan=starter" class="btn-primary">
+        Claim Your Spot — $347 Today
+        <span>→</span>
+      </a>
+      <a href="#solution" class="btn-ghost">See How It Works</a>
     </div>
-  </section>
+  </div>
+  <div class="hero-trust">
+    <div class="trust-badge">
+      <div class="trust-icon">✓</div>
+      No contracts
+    </div>
+    <div class="trust-divider"></div>
+    <div class="trust-badge">
+      <div class="trust-icon">⚡</div>
+      Live in 5–7 days
+    </div>
+    <div class="trust-divider"></div>
+    <div class="trust-badge">
+      <div class="trust-icon">🔒</div>
+      Cancel anytime
+    </div>
+    <div class="trust-divider"></div>
+    <div class="trust-badge">
+      <div class="trust-icon">★</div>
+      4.9★ rated
+    </div>
+  </div>
+</section>
 
-  <!-- ─── PROBLEM ─── -->
-  <section id="problem">
-    <div class="container">
-      <p class="section-label">The Problem</p>
-      <div class="section-divider"></div>
-      <h2>Your shop is leaking money every day.</h2>
-      <p class="section-sub">Most shops don't have a lead problem — they have a follow-up problem. Here's what it's costing you.</p>
-      <div class="cards-grid">
-        <div class="card">
-          <div class="card-icon">📞</div>
-          <h3>Missed calls = missed money</h3>
-          <p>Most shops lose 30–50% of leads just from slow response. If you don't reply in 5 minutes, they've already called your competitor.</p>
-        </div>
-        <div class="card">
-          <div class="card-icon">😤</div>
-          <h3>Following up manually is exhausting</h3>
-          <p>Your team shouldn't be babysitting leads. Chasing people down is draining, inconsistent, and doesn't scale.</p>
-        </div>
-        <div class="card">
-          <div class="card-icon">⭐</div>
-          <h3>Reviews don't collect themselves</h3>
-          <p>Google reviews drive new customers. Most shops never ask — and the few that do are too slow, too inconsistent.</p>
-        </div>
+<!-- SOCIAL PROOF BAR -->
+<div class="proof-bar">
+  <div class="proof-track">
+    <div class="proof-item"><span class="dot"></span>500+ leads recovered</div>
+    <div class="proof-item"><span class="dot"></span>4.9★ average rating</div>
+    <div class="proof-item"><span class="dot"></span>Live in 5–7 days</div>
+    <div class="proof-item"><span class="dot"></span>24/7 automated follow-up</div>
+    <div class="proof-item"><span class="dot"></span>No contracts, cancel anytime</div>
+    <div class="proof-item"><span class="dot"></span>Trusted by 80+ shops</div>
+    <div class="proof-item"><span class="dot"></span>Done-for-you setup</div>
+    <!-- duplicate for seamless loop -->
+    <div class="proof-item"><span class="dot"></span>500+ leads recovered</div>
+    <div class="proof-item"><span class="dot"></span>4.9★ average rating</div>
+    <div class="proof-item"><span class="dot"></span>Live in 5–7 days</div>
+    <div class="proof-item"><span class="dot"></span>24/7 automated follow-up</div>
+    <div class="proof-item"><span class="dot"></span>No contracts, cancel anytime</div>
+    <div class="proof-item"><span class="dot"></span>Trusted by 80+ shops</div>
+    <div class="proof-item"><span class="dot"></span>Done-for-you setup</div>
+  </div>
+</div>
+
+<!-- PROBLEM -->
+<section class="problem bg-glow-section" id="problem">
+  <div class="container">
+    <div class="fade-in">
+      <span class="section-label">The Problem</span>
+      <h2 class="section-title">Every Missed Call Is<br>Money Driving Away</h2>
+      <p class="section-sub">Auto detail shops lose thousands every month to simple, fixable communication gaps.</p>
+    </div>
+    <div class="problem-grid">
+      <div class="glass-card problem-card fade-in fade-in-delay-1">
+        <span class="problem-icon">📵</span>
+        <h3>Missed Calls = Missed Money</h3>
+        <p>62% of customers won't leave a voicemail. They call the next shop on the list. While you're under a car, your next booking just booked your competitor.</p>
+        <span class="stat" data-target="62">0</span><span class="stat">%</span>
+      </div>
+      <div class="glass-card problem-card fade-in fade-in-delay-2">
+        <span class="problem-icon">🔁</span>
+        <h3>No Follow-Up System</h3>
+        <p>You're too busy doing great work to chase leads. Manual follow-ups fall through the cracks. Customers forget. Bookings evaporate. Revenue walks out the door.</p>
+        <span class="stat" data-target="80">0</span><span class="stat">%</span><br><small style="color:var(--white-40);font-size:0.75rem">of leads need 5+ follow-ups</small>
+      </div>
+      <div class="glass-card problem-card fade-in fade-in-delay-3">
+        <span class="problem-icon">⏰</span>
+        <h3>Your Time Is Already Gone</h3>
+        <p>Hiring a receptionist costs $3,000+/mo. Learning to build automations yourself takes weeks. Meanwhile the phone keeps ringing and going unanswered.</p>
+        <span class="stat">$3K+</span><br><small style="color:var(--white-40);font-size:0.75rem">per month for a receptionist</small>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- ─── SOLUTION ─── -->
-  <section id="solution">
-    <div class="container">
-      <div class="solution-header">
-        <p class="section-label">The Solution</p>
-        <div class="section-divider" style="margin: 0 auto 1.5rem;"></div>
-        <h2>Introducing <span style="color:var(--gold)">The Apex System</span></h2>
-        <p class="section-sub">One done-for-you package. Four automations that run 24/7 so you don't have to.</p>
-      </div>
-      <div class="features-grid">
-        <div class="feature-card">
-          <span class="feature-icon">📱</span>
-          <h3>Missed Call Text-Back</h3>
-          <p>Instant automated text sent the moment a call is missed. No more silent voicemails — every lead gets a reply in seconds.</p>
-        </div>
-        <div class="feature-card">
-          <span class="feature-icon">🔁</span>
-          <h3>Lead Follow-Up Sequence</h3>
-          <p>Automatic SMS and email follow-up over 7 days. Consistent, personal-sounding, and fully hands-off for your team.</p>
-        </div>
-        <div class="feature-card">
-          <span class="feature-icon">🌟</span>
-          <h3>Review Request Automation</h3>
-          <p>After every completed job, customers automatically get a request for a Google review. Watch your rating climb on autopilot.</p>
-        </div>
-        <div class="feature-card">
-          <span class="feature-icon">🔄</span>
-          <h3>Customer Reactivation</h3>
-          <p>Re-engage past customers every 90 days with a targeted message. Turn your existing database into a reliable revenue stream.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ─── ROI CALCULATOR ─── -->
-  <section id="roi">
-    <div class="container">
-      <p class="section-label">ROI Calculator</p>
-      <div class="section-divider"></div>
-      <h2>Find out what missed calls are costing you.</h2>
-      <p class="section-sub">Drag the sliders. See the number. Then decide.</p>
-      <div class="roi-wrap">
-        <div class="roi-inputs">
-          <div class="roi-input-group">
-            <label>Missed calls per week <span id="callsVal">5</span></label>
-            <input type="range" class="roi-slider" id="callsSlider" min="1" max="50" value="5" />
+<!-- SOLUTION -->
+<section id="solution" style="background: var(--black);">
+  <div class="container">
+    <div class="solution-inner">
+      <div class="fade-in">
+        <span class="section-label">The Solution</span>
+        <h2 class="section-title">The Apex System</h2>
+        <p class="section-sub" style="margin-bottom: 40px;">A fully automated lead recovery and follow-up engine built specifically for auto detail shops.</p>
+        <div class="solution-features">
+          <div class="feature-item">
+            <div class="feature-icon">💬</div>
+            <div class="feature-text">
+              <h4>Missed Call Text-Back</h4>
+              <p>The moment a call goes unanswered, an instant SMS fires back — keeping the lead warm before they dial a competitor.</p>
+            </div>
           </div>
-          <div class="roi-input-group">
-            <label>Average job value <span id="valueVal">$300</span></label>
-            <input type="range" class="roi-slider" id="valueSlider" min="50" max="2000" step="50" value="300" />
+          <div class="feature-item">
+            <div class="feature-icon">🤖</div>
+            <div class="feature-text">
+              <h4>AI Follow-Up Sequences</h4>
+              <p>Multi-touch automated follow-ups over SMS & email that nurture leads until they book — without you lifting a finger.</p>
+            </div>
           </div>
-          <div class="roi-input-group">
-            <label>Close rate on recovered leads <span id="closeVal">40%</span></label>
-            <input type="range" class="roi-slider" id="closeSlider" min="10" max="80" step="5" value="40" />
+          <div class="feature-item">
+            <div class="feature-icon">📅</div>
+            <div class="feature-text">
+              <h4>Automated Booking & Reminders</h4>
+              <p>Customers self-book directly into your calendar. Automated reminders slash no-shows by up to 60%.</p>
+            </div>
           </div>
-        </div>
-        <div class="roi-result">
-          <div class="roi-result-label">Monthly revenue you're leaving on the table</div>
-          <div class="roi-result-amount" id="roiMonthly">$2,400</div>
-          <div class="roi-result-sub">That's <strong id="roiYearly">$28,800/year</strong> walking out the door.</div>
-          <div class="roi-breakdown">
-            <div class="roi-row"><span>Missed calls/mo</span><span class="roi-val" id="roiCalls">20</span></div>
-            <div class="roi-row"><span>Recoverable leads</span><span class="roi-val" id="roiLeads">8</span></div>
-            <div class="roi-row"><span>Revenue recovered</span><span class="roi-val" id="roiRecovered">$2,400</span></div>
-            <div class="roi-row"><span>Apex costs you</span><span class="roi-val">~$497/mo</span></div>
+          <div class="feature-item">
+            <div class="feature-icon">⭐</div>
+            <div class="feature-text">
+              <h4>5-Star Review Generation</h4>
+              <p>Post-service follow-ups automatically request Google reviews from happy customers — building social proof on autopilot.</p>
+            </div>
           </div>
-          <a href="#contact" class="btn-primary" style="display:block;text-align:center;">Recover That Revenue →</a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ─── COMPARISON ─── -->
-  <section id="compare">
-    <div class="container">
-      <p class="section-label">Why Apex</p>
-      <div class="section-divider"></div>
-      <h2>How we stack up.</h2>
-      <p class="section-sub">Every alternative has a hidden cost. Here's the honest breakdown.</p>
-      <div style="overflow-x:auto;">
-        <table class="compare-table">
-          <thead>
-            <tr>
-              <th></th>
-              <th>Hire a Receptionist</th>
-              <th>DIY Software</th>
-              <th>Do Nothing</th>
-              <th class="apex-col">⚡ Apex System</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Monthly cost</td>
-              <td>$2,500–4,000</td>
-              <td>$200–500 + your time</td>
-              <td>$0</td>
-              <td class="apex-col" style="color:var(--gold);font-weight:700;">$497/mo</td>
-            </tr>
-            <tr>
-              <td>Responds in under 60 seconds</td>
-              <td><span class="cross">✕</span></td>
-              <td><span class="partial">Maybe</span></td>
-              <td><span class="cross">✕</span></td>
-              <td class="apex-col"><span class="check">✓</span></td>
-            </tr>
-            <tr>
-              <td>Works 24/7</td>
-              <td><span class="cross">✕</span></td>
-              <td><span class="partial">Partial</span></td>
-              <td><span class="cross">✕</span></td>
-              <td class="apex-col"><span class="check">✓</span></td>
-            </tr>
-            <tr>
-              <td>Automated follow-up sequence</td>
-              <td><span class="cross">✕</span></td>
-              <td><span class="partial">DIY setup</span></td>
-              <td><span class="cross">✕</span></td>
-              <td class="apex-col"><span class="check">✓</span></td>
-            </tr>
-            <tr>
-              <td>Review request automation</td>
-              <td><span class="cross">✕</span></td>
-              <td><span class="partial">DIY setup</span></td>
-              <td><span class="cross">✕</span></td>
-              <td class="apex-col"><span class="check">✓</span></td>
-            </tr>
-            <tr>
-              <td>Customer reactivation</td>
-              <td><span class="cross">✕</span></td>
-              <td><span class="cross">✕</span></td>
-              <td><span class="cross">✕</span></td>
-              <td class="apex-col"><span class="check">✓</span></td>
-            </tr>
-            <tr>
-              <td>No setup required from you</td>
-              <td><span class="cross">✕</span></td>
-              <td><span class="cross">✕</span></td>
-              <td><span class="check">✓</span></td>
-              <td class="apex-col"><span class="check">✓</span></td>
-            </tr>
-            <tr>
-              <td>Live in 5–7 days</td>
-              <td><span class="cross">✕</span></td>
-              <td><span class="cross">✕</span></td>
-              <td><span class="cross">✕</span></td>
-              <td class="apex-col"><span class="check">✓</span></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </section>
-
-  <!-- ─── TESTIMONIALS ─── -->
-  <section id="testimonials">
-    <div class="container">
-      <p class="section-label">Results</p>
-      <div class="section-divider"></div>
-      <h2>Shop owners love the system.</h2>
-      <p class="section-sub">Real results from real shops. No fluff.</p>
-      <div class="testimonials-grid">
-        <div class="testimonial-card">
-          <div class="testimonial-stars">★★★★★</div>
-          <p class="testimonial-quote">“I was skeptical at first but within the first week we recovered 3 jobs we would have lost to voicemail. Paid for itself immediately.”</p>
-          <div class="testimonial-author">
-            <div class="testimonial-avatar">👤</div>
-            <div>
-              <div class="testimonial-name">Marcus T.</div>
-              <div class="testimonial-biz">MT Auto Detail — Phoenix, AZ</div>
+          <div class="feature-item">
+            <div class="feature-icon">📊</div>
+            <div class="feature-text">
+              <h4>Dashboard & Reporting</h4>
+              <p>See every lead, every conversation, every booking — in one clean dashboard. Know exactly what your automation is earning you.</p>
             </div>
           </div>
         </div>
-        <div class="testimonial-card">
-          <div class="testimonial-stars">★★★★★</div>
-          <p class="testimonial-quote">“The Google review automation alone has been a game changer. We went from 34 reviews to 91 in two months. Our phone rings more now.”</p>
-          <div class="testimonial-author">
-            <div class="testimonial-avatar">👤</div>
-            <div>
-              <div class="testimonial-name">Denise R.</div>
-              <div class="testimonial-biz">Pristine Auto Spa — Dallas, TX</div>
+      </div>
+      <div class="phone-wrap fade-in fade-in-delay-2">
+        <div class="phone">
+          <div class="phone-screen">
+            <div class="phone-header">
+              <div class="phone-avatar">A</div>
+              <div class="phone-contact">
+                <div class="phone-contact-name">Apex Auto Reply</div>
+                <div class="phone-contact-status">● Active now</div>
+              </div>
             </div>
-          </div>
-        </div>
-        <div class="testimonial-card">
-          <div class="testimonial-stars">★★★★★</div>
-          <p class="testimonial-quote">“Setup was painless, they handled everything. I didn’t have to touch a single thing. It just… works. I wish I’d done this two years ago.”</p>
-          <div class="testimonial-author">
-            <div class="testimonial-avatar">👤</div>
-            <div>
-              <div class="testimonial-name">James K.</div>
-              <div class="testimonial-biz">Kings Detail Co. — Atlanta, GA</div>
+            <div class="phone-messages">
+              <div class="msg-time">Just now</div>
+              <div class="msg msg-in">Hey I tried calling to book a detail, nobody answered</div>
+              <div class="msg msg-out">Hey! Sorry we missed you 🙏 We'd love to get your car booked in. What service are you looking for?</div>
+              <div class="msg msg-in">Full detail on my Tesla Model 3</div>
+              <div class="msg msg-out">Nice choice! We have openings this week. Click to grab a time that works for you 👇<br><br>📅 apex.auto/book</div>
+              <div class="msg msg-in">Perfect, just booked for Thursday!</div>
+              <div class="msg msg-out">Confirmed ✅ You'll get a reminder the day before. We'll make it shine! ✨</div>
+              <div class="msg-typing">
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- ─── PRICING ─── -->
-  <section id="pricing">
-    <div class="container">
-      <p class="section-label">Pricing</p>
-      <div class="section-divider" style="margin: 0 auto 1.5rem;"></div>
-      <h2>One system. One price. Everything included.</h2>
-      <p class="section-sub" style="margin: 0.5rem auto 3rem;">No hidden fees. No long-term contracts. Just results.</p>
-      <div class="pricing-single">
-        <div class="pricing-card">
-          <div class="pricing-badge">⚡ Most Popular — Limited Spots Available</div>
-          <div class="pricing-top">
-            <div>
-              <div class="pricing-name">The Apex System</div>
-              <div class="pricing-tagline">Full done-for-you automation. Live in 5–7 days.</div>
-            </div>
-            <div class="pricing-amounts">
-              <div class="pricing-setup">One-time setup: <strong>$997</strong></div>
-              <div class="pricing-monthly">$497</div>
-              <div class="pricing-monthly-label">/month after</div>
-            </div>
-          </div>
-          <div class="pricing-divider"></div>
-          <ul class="pricing-features">
-            <li>Missed Call Text-Back</li>
-            <li>7-Day Follow-Up Sequence</li>
-            <li>Review Request Automation</li>
-            <li>Customer Reactivation</li>
-            <li>Hosting &amp; infrastructure</li>
-            <li>Unlimited tweaks</li>
-            <li>Priority support</li>
-            <li>Live in 5–7 business days</li>
-          </ul>
-          <div class="pricing-total">
-            <span class="pricing-total-label">Due today (setup + first month)</span>
-            <span class="pricing-total-val">$1,494</span>
-          </div>
-          <a href="checkout.html?plan=starter" class="btn-primary">Get Started — Claim Your Spot →</a>
+<!-- ROI CALCULATOR -->
+<section class="roi" id="roi">
+  <div class="container">
+    <div class="fade-in">
+      <span class="section-label">ROI Calculator</span>
+      <h2 class="section-title">See Your Return Before You Buy</h2>
+      <p class="section-sub">Drag the sliders to match your shop — see your real numbers.</p>
+    </div>
+    <div class="roi-inner" style="margin-top: 56px;">
+      <div class="roi-controls">
+        <div class="slider-group fade-in fade-in-delay-1">
+          <label>
+            <span>Missed calls per week</span>
+            <span id="calls-val">15</span>
+          </label>
+          <input type="range" id="calls" min="2" max="60" value="15" />
         </div>
-        <p class="pricing-note">🔒 No contracts &nbsp;&middot;&nbsp; Cancel anytime &nbsp;&middot;&nbsp; Secured by Stripe</p>
+        <div class="slider-group fade-in fade-in-delay-2">
+          <label>
+            <span>Average job value</span>
+            <span id="value-val">$280</span>
+          </label>
+          <input type="range" id="job-value" min="100" max="800" value="280" step="10" />
+        </div>
+        <div class="slider-group fade-in fade-in-delay-3">
+          <label>
+            <span>Close rate from follow-up</span>
+            <span id="rate-val">30%</span>
+          </label>
+          <input type="range" id="close-rate" min="10" max="70" value="30" step="5" />
+        </div>
+        <div class="glass-card fade-in fade-in-delay-4" style="padding: 24px;">
+          <p style="font-size:0.85rem;color:var(--white-70);line-height:1.6;">
+            <strong style="color:var(--white);">Conservative estimate:</strong> Most shops recover 2–4 lost leads per week within the first 30 days. At an average of <strong id="roi-avg-job" style="color:var(--gold);">$280</strong>/job, that's real money back in your pocket within weeks.
+          </p>
+        </div>
+      </div>
+      <div class="roi-result fade-in fade-in-delay-2">
+        <span class="roi-result-label">Monthly Revenue Recovered</span>
+        <div class="roi-amount" id="roi-total">$0</div>
+        <div class="roi-desc">estimated per month with Apex Automations</div>
+        <div class="roi-breakdown">
+          <div class="roi-row">
+            <span>Leads recovered / month</span>
+            <span id="roi-leads">0</span>
+          </div>
+          <div class="roi-row">
+            <span>Revenue recovered</span>
+            <span id="roi-revenue">$0</span>
+          </div>
+          <div class="roi-row">
+            <span>Apex cost / month</span>
+            <span style="color:#ff453a;">-$297</span>
+          </div>
+          <div class="roi-row" style="border-top: 1px solid rgba(232,197,71,0.2); margin-top: 8px; padding-top: 16px;">
+            <span style="font-weight:700;color:var(--white);">Net profit</span>
+            <span id="roi-net" style="color:var(--gold);font-size:1.1rem;">$0</span>
+          </div>
+        </div>
+        <a href="checkout.html?plan=starter" class="btn-primary" style="display:inline-flex;margin-top:28px;font-size:0.95rem;padding:14px 28px;">
+          Unlock This ROI — $347 Today →
+        </a>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- ─── FAQ ─── -->
-  <section id="faq">
-    <div class="container">
-      <p class="section-label">FAQ</p>
-      <div class="section-divider"></div>
-      <h2>Common questions, answered.</h2>
-      <p class="section-sub">Still on the fence? We get it. Here's what most shop owners ask us first.</p>
-      <div class="faq-list">
+<!-- COMPARISON TABLE -->
+<section class="comparison" id="comparison">
+  <div class="container">
+    <div class="fade-in" style="text-align:center;">
+      <span class="section-label">Compare Your Options</span>
+      <h2 class="section-title">Why Apex Wins Every Time</h2>
+      <p class="section-sub" style="margin: 0 auto;">Don't settle for patchwork. See how Apex stacks up against every other option.</p>
+    </div>
+    <div class="table-wrap fade-in">
+      <table>
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th class="apex-col">⚡ Apex Automations</th>
+            <th>Receptionist</th>
+            <th>DIY Tools</th>
+            <th>Do Nothing</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>24/7 instant response</td>
+            <td class="apex-col"><span class="check">✓</span></td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="partial">Maybe</span></td>
+            <td><span class="cross">✗</span></td>
+          </tr>
+          <tr>
+            <td>Automated follow-up sequences</td>
+            <td class="apex-col"><span class="check">✓</span></td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="partial">Partial</span></td>
+            <td><span class="cross">✗</span></td>
+          </tr>
+          <tr>
+            <td>Done-for-you setup</td>
+            <td class="apex-col"><span class="check">✓</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="cross">✗</span></td>
+          </tr>
+          <tr>
+            <td>Booking & calendar integration</td>
+            <td class="apex-col"><span class="check">✓</span></td>
+            <td><span class="partial">Manual</span></td>
+            <td><span class="partial">Complex</span></td>
+            <td><span class="cross">✗</span></td>
+          </tr>
+          <tr>
+            <td>Review generation</td>
+            <td class="apex-col"><span class="check">✓</span></td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="partial">Paid add-on</span></td>
+            <td><span class="cross">✗</span></td>
+          </tr>
+          <tr>
+            <td>Monthly cost</td>
+            <td class="apex-col" style="color:var(--gold);font-weight:700;">$297/mo</td>
+            <td>$2,500–4,000/mo</td>
+            <td>$200+/mo + your time</td>
+            <td>$0 (lose $000s)</td>
+          </tr>
+          <tr>
+            <td>Live in under a week</td>
+            <td class="apex-col"><span class="check">✓</span></td>
+            <td><span class="cross">Weeks to hire</span></td>
+            <td><span class="cross">Months to build</span></td>
+            <td>—</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
 
-        <div class="faq-item open">
-          <button class="faq-question" aria-expanded="true">
-            Do I need to be tech-savvy?
-            <span class="faq-arrow">▾</span>
-          </button>
-          <div class="faq-answer">
-            No. We handle everything — setup, configuration, testing, and ongoing maintenance. You just run your shop.
+<!-- TESTIMONIALS -->
+<section class="testimonials" id="testimonials">
+  <div class="container">
+    <div class="fade-in" style="text-align:center;">
+      <span class="section-label">Testimonials</span>
+      <h2 class="section-title">Shop Owners Love Apex</h2>
+      <p class="section-sub" style="margin: 0 auto;">Real results from real detail shops. No fluff, just outcomes.</p>
+    </div>
+    <div class="testi-grid">
+      <div class="glass-card testi-card fade-in fade-in-delay-1">
+        <div class="stars">
+          <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+        </div>
+        <p class="testi-quote">Within the first two weeks, we recovered 4 jobs I would have 100% lost. That's over $1,200 in bookings from leads that texted while I was under a hood. This thing pays for itself in a week.</p>
+        <div class="testi-author">
+          <div class="testi-avatar">MR</div>
+          <div>
+            <div class="testi-name">Marcus R.</div>
+            <div class="testi-role">Owner, Prestige Detail Co. — Phoenix, AZ</div>
           </div>
         </div>
-
-        <div class="faq-item">
-          <button class="faq-question" aria-expanded="false">
-            How long does setup take?
-            <span class="faq-arrow">▾</span>
-          </button>
-          <div class="faq-answer">
-            Most clients are live within 5–7 business days from the time we receive your onboarding info. Fast, clean, and done right.
+      </div>
+      <div class="glass-card testi-card fade-in fade-in-delay-2">
+        <div class="stars">
+          <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+        </div>
+        <p class="testi-quote">I was skeptical. I'm not a tech guy. But the setup was fully done for me and it was live in 5 days. My Google reviews went from 18 to 41 in under 2 months. Night and day difference for new customers finding us.</p>
+        <div class="testi-author">
+          <div class="testi-avatar">JT</div>
+          <div>
+            <div class="testi-name">Jason T.</div>
+            <div class="testi-role">Owner, Diamond Shine Detailing — Austin, TX</div>
           </div>
         </div>
-
-        <div class="faq-item">
-          <button class="faq-question" aria-expanded="false">
-            What software do I need?
-            <span class="faq-arrow">▾</span>
-          </button>
-          <div class="faq-answer">
-            Just a phone number and email. We handle the rest — software, integrations, and the technical side are all on us.
+      </div>
+      <div class="glass-card testi-card fade-in fade-in-delay-3">
+        <div class="stars">
+          <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+        </div>
+        <p class="testi-quote">I was spending $2,800/mo on a part-time receptionist just to answer calls. Switched to Apex and she now handles only walk-ins. I'm saving $2,000 a month and actually following up better than before.</p>
+        <div class="testi-author">
+          <div class="testi-avatar">SL</div>
+          <div>
+            <div class="testi-name">Sofia L.</div>
+            <div class="testi-role">Owner, Elite Auto Spa — Miami, FL</div>
           </div>
         </div>
-
-        <div class="faq-item">
-          <button class="faq-question" aria-expanded="false">
-            Will this work for my shop?
-            <span class="faq-arrow">▾</span>
-          </button>
-          <div class="faq-answer">
-            If you get leads, yes. Whether you're a solo detailer or running a full body shop, our system is built to fit your operation.
-          </div>
-        </div>
-
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- ─── CONTACT ─── -->
-  <section id="contact">
-    <div class="container">
-      <p class="section-label">Get Started</p>
-      <div class="section-divider" style="margin: 0 auto 1.5rem;"></div>
-      <h2>Ready to stop losing leads?</h2>
-      <p class="section-sub">Fill out the form below and we'll reach out within 24 hours to walk you through exactly how The Apex System works for your shop.</p>
+<!-- PRICING -->
+<section class="pricing" id="pricing">
+  <div class="container">
+    <div class="fade-in" style="text-align:center;">
+      <span class="section-label">Simple Pricing</span>
+      <h2 class="section-title">One Offer. Crystal Clear.</h2>
+      <p class="section-sub" style="margin: 0 auto;">No hidden fees. No confusing tiers. Just one powerful system at a flat rate.</p>
+    </div>
+    <div class="pricing-inner">
+      <div class="pricing-card fade-in">
+        <span class="pricing-badge">Most Popular</span>
+        <h3 class="pricing-name">Apex Starter System</h3>
+        <p class="pricing-tagline">The complete done-for-you automation stack</p>
+        <div class="pricing-amount">
+          <span class="price-monthly">$297</span><span class="price-mo">/mo</span>
+        </div>
+        <p class="price-setup">+ $50 one-time setup fee</p>
+        <div class="price-today">💳 Total due today: $347</div>
+        <ul class="pricing-features">
+          <li><span class="pf-check">✓</span> Missed call text-back (instant, 24/7)</li>
+          <li><span class="pf-check">✓</span> AI-powered follow-up sequences (SMS + email)</li>
+          <li><span class="pf-check">✓</span> Online booking & calendar sync</li>
+          <li><span class="pf-check">✓</span> Appointment reminders (no-shows slashed)</li>
+          <li><span class="pf-check">✓</span> Automated Google review requests</li>
+          <li><span class="pf-check">✓</span> Lead dashboard & reporting</li>
+          <li><span class="pf-check">✓</span> Done-for-you setup (live in 5–7 days)</li>
+          <li><span class="pf-check">✓</span> Dedicated onboarding support</li>
+        </ul>
+        <a href="checkout.html?plan=starter" class="pricing-cta">Get Started — $347 Today</a>
+        <p class="pricing-fine">No long-term contracts. Cancel anytime. 30-day satisfaction guarantee.</p>
+      </div>
+    </div>
+  </div>
+</section>
 
-      <form class="contact-form" action="https://formspree.io/f/xeewolng" method="POST" id="demoForm">
-        <div class="form-row">
+<!-- FAQ -->
+<section class="faq" id="faq">
+  <div class="container">
+    <div class="fade-in" style="text-align:center;">
+      <span class="section-label">FAQ</span>
+      <h2 class="section-title">Questions? Answered.</h2>
+    </div>
+    <div class="faq-list">
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          How long until it's live?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-a">We handle the entire setup for you. Most shops are fully live within 5–7 business days. You'll get a dedicated onboarding call where we connect your phone, CRM, and booking system. No tech skills needed on your end.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Do I need any special software or tools?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-a">Nope. We work with your existing phone number and integrate with the booking tools you already use (or set up a new one if needed). Everything runs in the background — you don't need to log into anything daily.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Will it sound robotic to my customers?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-a">Not at all. We write custom messages that match your shop's voice and personality. Most customers don't realize it's automated — they just appreciate the fast, friendly response. You can review and approve every message before it goes live.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          What if someone texts back something I need to handle personally?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-a">The system is smart enough to route complex conversations to you. You get a notification when a lead needs human attention, and you can take over the conversation directly from your phone — it hands off seamlessly.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Is there a contract?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-a">No contracts, ever. We're month-to-month. If you're not seeing results, you can cancel anytime — no questions asked, no cancellation fees. We believe the system should earn its keep every single month.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          What's included in the $50 setup fee?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-a">The $50 setup fee covers everything: custom message writing tailored to your shop, phone number configuration, CRM and booking system integration, workflow building, testing, and your onboarding call. This is normally worth $400+ — we keep it low to remove the barrier to getting started.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Do you work with any type of detail shop?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-a">Yes — solo detailers, mobile detail businesses, fixed-location shops, and full-service auto spas. The system adapts to your service menu, booking flow, and team size. If you have a phone and customers, we can automate your follow-up.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact" id="contact">
+  <div class="container">
+    <div class="contact-inner">
+      <div class="fade-in">
+        <span class="section-label">Get In Touch</span>
+        <h2>Ready to Stop Losing Leads?</h2>
+        <p>Have a question before you commit? Send us a message and we'll get back to you within a few hours — usually much faster.</p>
+        <div class="contact-detail">
+          <div class="contact-detail-icon">✉️</div>
+          <span>contact@apexautomations.pro</span>
+        </div>
+        <div class="contact-detail">
+          <div class="contact-detail-icon">⚡</div>
+          <span>Response within 2 business hours</span>
+        </div>
+        <div class="contact-detail">
+          <div class="contact-detail-icon">📅</div>
+          <span>Free 15-min strategy call available</span>
+        </div>
+      </div>
+      <div class="fade-in fade-in-delay-1">
+        <form class="contact-form" id="contact-form" action="https://formspree.io/f/xeewolng" method="POST">
+          <div class="form-row">
+            <div class="form-group">
+              <label>First Name</label>
+              <input type="text" name="first_name" placeholder="Marcus" required />
+            </div>
+            <div class="form-group">
+              <label>Last Name</label>
+              <input type="text" name="last_name" placeholder="Rivera" required />
+            </div>
+          </div>
           <div class="form-group">
-            <label for="name">Your Name</label>
-            <input type="text" id="name" name="name" placeholder="John Smith" required />
+            <label>Email Address</label>
+            <input type="email" name="email" placeholder="marcus@mydetailshop.com" required />
           </div>
           <div class="form-group">
-            <label for="business">Business Name</label>
-            <input type="text" id="business" name="business" placeholder="Smith's Detail &amp; Body" required />
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label for="phone">Phone Number</label>
-            <input type="tel" id="phone" name="phone" placeholder="(555) 000-0000" required />
+            <label>Phone Number</label>
+            <input type="tel" name="phone" placeholder="(555) 000-0000" />
           </div>
           <div class="form-group">
-            <label for="email">Email Address</label>
-            <input type="email" id="email" name="email" placeholder="john@yourshop.com" required />
+            <label>Shop Type</label>
+            <select name="shop_type">
+              <option value="">Select your shop type</option>
+              <option value="fixed">Fixed Location</option>
+              <option value="mobile">Mobile Detailer</option>
+              <option value="both">Both</option>
+              <option value="other">Other</option>
+            </select>
           </div>
-        </div>
-        <input type="hidden" name="_subject" value="New Demo Request — Apex Automations" />
-        <input type="hidden" name="_next" value="https://apexautomations.pro?demo=thanks" />
-        <div class="form-submit">
-          <button type="submit" class="btn-primary">Book My Free Demo →</button>
-        </div>
-        <p class="form-note">We'll reach out within 24 hours. No spam, no pressure.</p>
-      </form>
+          <div class="form-group">
+            <label>Message</label>
+            <textarea name="message" placeholder="Tell us about your shop and what you're looking to achieve…"></textarea>
+          </div>
+          <button type="submit" class="form-submit">Send Message →</button>
+          <div class="form-success" id="form-success">
+            ✅ Message sent! We'll be in touch within 2 hours.
+          </div>
+        </form>
+      </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- ─── FOOTER ─── -->
-  <footer>
-    <strong>Apex Automations</strong> © 2026 &nbsp;|&nbsp; Built for the shops that want to grow
-  </footer>
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">
+      <div class="nav-logo-icon" style="width:28px;height:28px;font-size:0.75rem;">A</div>
+      Apex Automations
+    </div>
+    <ul class="footer-links">
+      <li><a href="#problem">Problem</a></li>
+      <li><a href="#solution">Solution</a></li>
+      <li><a href="#pricing">Pricing</a></li>
+      <li><a href="#faq">FAQ</a></li>
+      <li><a href="mailto:contact@apexautomations.pro">contact@apexautomations.pro</a></li>
+    </ul>
+    <p class="footer-copy">© 2025 Apex Automations. All rights reserved.</p>
+  </div>
+</footer>
 
-  <!-- ─── ROI CALCULATOR JS ─── -->
-  <script>
-    function updateROI() {
-      const calls  = parseInt(document.getElementById('callsSlider').value);
-      const value  = parseInt(document.getElementById('valueSlider').value);
-      const close  = parseInt(document.getElementById('closeSlider').value);
-
-      document.getElementById('callsVal').textContent = calls;
-      document.getElementById('valueVal').textContent = '$' + value.toLocaleString();
-      document.getElementById('closeVal').textContent = close + '%';
-
-      const monthly   = calls * 4; // calls/week * 4 weeks
-      const recovered = Math.round(monthly * (close / 100));
-      const revenue   = recovered * value;
-      const yearly    = revenue * 12;
-
-      document.getElementById('roiCalls').textContent     = monthly;
-      document.getElementById('roiLeads').textContent     = recovered;
-      document.getElementById('roiRecovered').textContent = '$' + revenue.toLocaleString();
-      document.getElementById('roiMonthly').textContent   = '$' + revenue.toLocaleString();
-      document.getElementById('roiYearly').textContent    = '$' + yearly.toLocaleString() + '/year';
-    }
-
-    ['callsSlider','valueSlider','closeSlider'].forEach(function(id) {
-      document.getElementById(id).addEventListener('input', updateROI);
+<script>
+  // ===== SCROLL ANIMATIONS =====
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
     });
+  }, { threshold: 0.12 });
 
-    updateROI();
-  </script>
+  document.querySelectorAll('.fade-in').forEach(el => {
+    observer.observe(el);
+  });
 
-  <!-- ─── FAQ ACCORDION JS ─── -->
-  <script>
-    document.querySelectorAll('.faq-question').forEach(function(btn) {
-      btn.addEventListener('click', function() {
-        var item = this.closest('.faq-item');
-        var isOpen = item.classList.contains('open');
+  // Auto-trigger hero elements
+  document.querySelectorAll('.hero .fade-in').forEach(el => {
+    setTimeout(() => el.classList.add('visible'), 100);
+  });
 
-        // Close all
-        document.querySelectorAll('.faq-item').forEach(function(el) {
-          el.classList.remove('open');
-          el.querySelector('.faq-question').setAttribute('aria-expanded', 'false');
+  // ===== NUMBER COUNTER =====
+  function animateCounter(el) {
+    const target = parseInt(el.getAttribute('data-target'));
+    if (!target) return;
+    let current = 0;
+    const step = target / 40;
+    const timer = setInterval(() => {
+      current += step;
+      if (current >= target) {
+        current = target;
+        clearInterval(timer);
+      }
+      el.textContent = Math.round(current);
+    }, 40);
+  }
+
+  const counterObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        animateCounter(entry.target);
+        counterObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.5 });
+
+  document.querySelectorAll('[data-target]').forEach(el => counterObserver.observe(el));
+
+  // ===== ROI CALCULATOR =====
+  function updateROI() {
+    const calls = parseInt(document.getElementById('calls').value);
+    const jobVal = parseInt(document.getElementById('job-value').value);
+    const rate = parseInt(document.getElementById('close-rate').value) / 100;
+
+    document.getElementById('calls-val').textContent = calls;
+    document.getElementById('value-val').textContent = '$' + jobVal;
+    document.getElementById('rate-val').textContent = Math.round(rate * 100) + '%';
+    document.getElementById('roi-avg-job').textContent = '$' + jobVal;
+
+    const leadsPerMonth = calls * 4.33;
+    const recovered = Math.round(leadsPerMonth * rate);
+    const revenue = recovered * jobVal;
+    const net = revenue - 297;
+
+    document.getElementById('roi-leads').textContent = recovered;
+    document.getElementById('roi-revenue').textContent = '$' + revenue.toLocaleString();
+    document.getElementById('roi-net').textContent = '$' + net.toLocaleString();
+    document.getElementById('roi-total').textContent = '$' + revenue.toLocaleString();
+  }
+
+  ['calls', 'job-value', 'close-rate'].forEach(id => {
+    document.getElementById(id).addEventListener('input', updateROI);
+  });
+  updateROI();
+
+  // ===== FAQ ACCORDION =====
+  function toggleFaq(btn) {
+    const item = btn.closest('.faq-item');
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+    if (!isOpen) item.classList.add('open');
+  }
+
+  // ===== CONTACT FORM =====
+  const form = document.getElementById('contact-form');
+  if (form) {
+    form.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const btn = form.querySelector('.form-submit');
+      btn.textContent = 'Sending…';
+      btn.disabled = true;
+      try {
+        const data = new FormData(form);
+        const response = await fetch(form.action, {
+          method: 'POST',
+          body: data,
+          headers: { 'Accept': 'application/json' }
         });
-
-        // Toggle clicked
-        if (!isOpen) {
-          item.classList.add('open');
-          this.setAttribute('aria-expanded', 'true');
+        if (response.ok) {
+          form.style.display = 'none';
+          document.getElementById('form-success').style.display = 'block';
+        } else {
+          btn.textContent = 'Try Again';
+          btn.disabled = false;
         }
-      });
+      } catch(err) {
+        btn.textContent = 'Try Again';
+        btn.disabled = false;
+      }
     });
-  </script>
+  }
 
+  // ===== NAV SCROLL EFFECT =====
+  window.addEventListener('scroll', () => {
+    const nav = document.querySelector('nav');
+    if (window.scrollY > 50) {
+      nav.style.background = 'rgba(5,5,8,0.92)';
+    } else {
+      nav.style.background = 'rgba(5,5,8,0.75)';
+    }
+  });
+</script>
 </body>
 </html>
