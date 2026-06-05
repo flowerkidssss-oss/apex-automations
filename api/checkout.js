@@ -3,22 +3,22 @@ const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 // Plan definitions — must match frontend
 const PLANS = {
   starter: {
-    name: 'The Apex System — Starter',
-    amountCents: 199700, // $1,997 (setup $1,500 + first month $497)
-    monthlyAmountCents: 49700,
-    description: '$1,500 setup + $497/mo',
+    name: 'The Apex System',
+    amountCents: 34700, // $347 ($50 setup + first month $297)
+    monthlyAmountCents: 29700,
+    description: '$50 setup + $297/mo',
   },
   growth: {
-    name: 'The Apex System — Growth',
-    amountCents: 229700, // $1,500 + $797
-    monthlyAmountCents: 79700,
-    description: '$1,500 setup + $797/mo',
+    name: 'The Apex System',
+    amountCents: 34700,
+    monthlyAmountCents: 29700,
+    description: '$50 setup + $297/mo',
   },
   dfy: {
-    name: 'The Apex System — Done-For-You',
-    amountCents: 299700, // $1,500 + $1,497
-    monthlyAmountCents: 149700,
-    description: '$1,500 setup + $1,497/mo',
+    name: 'The Apex System',
+    amountCents: 34700,
+    monthlyAmountCents: 29700,
+    description: '$50 setup + $297/mo',
   },
 };
 
