@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Apex Automations — Sales Kit</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --gold: #c8a227;
+      --gold-light: #e8c547;
+      --gold-bg: #fdf8ec;
+      --black: #0a0a0f;
+      --dark: #1a1a22;
+      --white: #ffffff;
+      --text: #1a1a2e;
+      --text-soft: #555570;
+      --text-muted: #888899;
+      --border: #e2e2ef;
+      --radius: 12px;
+      --radius-sm: 8px;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #ffffff;
+      color: var(--text);
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    a { color: var(--gold); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* ===== PRINT BUTTON (screen only) ===== */
+    .print-bar {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      z-index: 999;
+    }
+    .print-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--black);
+      color: #ffffff;
+      border: none;
+      border-radius: 100px;
+      padding: 13px 24px;
+      font-family: inherit;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+      transition: all 0.2s;
+    }
+    .print-btn:hover {
+      background: var(--gold);
+      color: var(--black);
+      box-shadow: 0 8px 32px rgba(200,162,39,0.35);
+    }
+    .print-btn svg { width: 16px; height: 16px; }
+
+    /* ===== PAGE BREAKS ===== */
+    .page-break { page-break-before: always; break-before: page; }
+    .no-break { page-break-inside: avoid; break-inside: avoid; }
+
+    /* ===== COVER ===== */
+    .cover {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 80px 0 60px;
+      border-bottom: 3px solid var(--gold);
+    }
+    .cover-eyebrow {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--gold);
+      background: var(--gold-bg);
+      padding: 5px 14px;
+      border-radius: 100px;
+      border: 1px solid rgba(200,162,39,0.25);
+      margin-bottom: 28px;
+    }
+    .cover-logo {
+      font-size: 3.2rem;
+      font-weight: 900;
+      letter-spacing: -0.06em;
+      color: var(--black);
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+    .cover-logo span { color: var(--gold); }
+    .cover-sub {
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--text-soft);
+      letter-spacing: 0.02em;
+      margin-bottom: 40px;
+    }
+    .cover-tagline {
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      line-height: 1.2;
+      color: var(--black);
+      max-width: 600px;
+      margin-bottom: 28px;
+    }
+    .cover-tagline em {
+      font-style: normal;
+      color: var(--gold);
+    }
+    .cover-meta {
+      font-size: 0.9rem;
+      color: var(--text-soft);
+    }
+    .cover-meta strong { color: var(--black); }
+    .cover-divider {
+      width: 60px;
+      height: 4px;
+      background: var(--gold);
+      border-radius: 4px;
+      margin: 32px 0;
+    }
+    .cover-accent {
+      position: absolute;
+      top: 0; right: 0;
+      width: 340px; height: 340px;
+      background: radial-gradient(ellipse at top right, rgba(200,162,39,0.08) 0%, transparent 65%);
+      pointer-events: none;
+    }
+
+    /* ===== SECTION COMMON ===== */
+    section {
+      padding: 64px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    section:last-child { border-bottom: none; }
+    .section-number {
+      font-size: 0.65rem;
+      font-weight: 800;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 10px;
+    }
+    .section-title {
+      font-size: 1.75rem;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      color: var(--black);
+      margin-bottom: 20px;
+      line-height: 1.2;
+    }
+    .section-body {
+      color: var(--text-soft);
+      font-size: 0.95rem;
+      max-width: 640px;
+    }
+
+    /* ===== PROBLEM SECTION ===== */
+    .problem-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-top: 24px;
+    }
+    .problem-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      padding: 20px 24px;
+      background: #fafafa;
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--gold);
+      border-radius: var(--radius-sm);
+    }
+    .problem-list li .icon {
+      font-size: 1.4rem;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .problem-list li .prob-content {}
+    .problem-list li .prob-title {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--black);
+      margin-bottom: 3px;
+    }
+    .problem-list li .prob-desc {
+      font-size: 0.87rem;
+      color: var(--text-soft);
+    }
+
+    /* ===== SYSTEM SECTION ===== */
+    .system-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 24px;
+    }
+    @media (max-width: 580px) {
+      .system-grid { grid-template-columns: 1fr; }
+    }
+    .system-card {
+      padding: 24px;
+      background: var(--gold-bg);
+      border: 1px solid rgba(200,162,39,0.2);
+      border-radius: var(--radius);
+    }
+    .system-card .s-num {
+      font-size: 0.65rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .system-card h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--black);
+      margin-bottom: 8px;
+    }
+    .system-card p {
+      font-size: 0.85rem;
+      color: var(--text-soft);
+      line-height: 1.55;
+    }
+
+    /* ===== ROI SECTION ===== */
+    .roi-box {
+      background: var(--black);
+      color: #ffffff;
+      border-radius: var(--radius);
+      padding: 40px;
+      margin-top: 24px;
+    }
+    .roi-box .roi-calc {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 24px;
+      margin-bottom: 28px;
+    }
+    @media (max-width: 520px) {
+      .roi-box .roi-calc { grid-template-columns: 1fr; text-align: center; }
+      .roi-arrow { display: none; }
+    }
+    .roi-stat {
+      text-align: center;
+    }
+    .roi-stat .roi-label {
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.45);
+      margin-bottom: 6px;
+    }
+    .roi-stat .roi-number {
+      font-size: 2.2rem;
+      font-weight: 900;
+      letter-spacing: -0.05em;
+      color: var(--gold-light);
+      line-height: 1;
+    }
+    .roi-stat .roi-sub {
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.5);
+      margin-top: 4px;
+    }
+    .roi-arrow {
+      font-size: 1.6rem;
+      color: rgba(255,255,255,0.2);
+      text-align: center;
+    }
+    .roi-callout {
+      border-top: 1px solid rgba(255,255,255,0.1);
+      padding-top: 24px;
+      text-align: center;
+    }
+    .roi-callout p {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: rgba(255,255,255,0.85);
+      line-height: 1.5;
+    }
+    .roi-callout strong { color: var(--gold-light); }
+    .roi-callout .roi-note {
+      font-size: 0.78rem;
+      color: rgba(255,255,255,0.35);
+      margin-top: 8px;
+    }
+
+    /* ===== PRICING ===== */
+    .pricing-card {
+      background: var(--gold-bg);
+      border: 2px solid var(--gold);
+      border-radius: var(--radius);
+      padding: 36px 40px;
+      margin-top: 24px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 32px;
+      flex-wrap: wrap;
+    }
+    .pricing-main {}
+    .pricing-badge {
+      display: inline-block;
+      font-size: 0.65rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--gold);
+      background: rgba(200,162,39,0.12);
+      padding: 4px 12px;
+      border-radius: 100px;
+      margin-bottom: 12px;
+      border: 1px solid rgba(200,162,39,0.3);
+    }
+    .pricing-amount {
+      font-size: 3rem;
+      font-weight: 900;
+      letter-spacing: -0.06em;
+      color: var(--black);
+      line-height: 1;
+    }
+    .pricing-amount sup {
+      font-size: 1.2rem;
+      font-weight: 700;
+      vertical-align: super;
+      letter-spacing: 0;
+    }
+    .pricing-breakdown {
+      font-size: 0.88rem;
+      color: var(--text-soft);
+      margin-top: 10px;
+    }
+    .pricing-breakdown span { color: var(--black); font-weight: 600; }
+    .pricing-perks {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding-top: 8px;
+    }
+    .pricing-perks li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.88rem;
+      color: var(--text-soft);
+    }
+    .pricing-perks li::before {
+      content: '✓';
+      color: var(--gold);
+      font-weight: 800;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+    }
+    .no-contracts {
+      margin-top: 16px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      letter-spacing: 0.02em;
+    }
+
+    /* ===== COMPARISON TABLE ===== */
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 24px;
+      font-size: 0.88rem;
+    }
+    .comparison-table th {
+      padding: 12px 16px;
+      text-align: left;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      border-bottom: 2px solid var(--border);
+    }
+    .comparison-table th:not(:first-child) { text-align: center; }
+    .comparison-table th.apex-col {
+      color: var(--gold);
+      background: var(--gold-bg);
+      border-radius: 8px 8px 0 0;
+    }
+    .comparison-table td {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-soft);
+      vertical-align: middle;
+    }
+    .comparison-table td:first-child {
+      font-weight: 600;
+      color: var(--text);
+    }
+    .comparison-table td:not(:first-child) { text-align: center; }
+    .comparison-table td.apex-col {
+      background: var(--gold-bg);
+      font-weight: 700;
+      color: var(--black);
+    }
+    .comparison-table tr:last-child td { border-bottom: none; }
+    .check { color: #22c55e; font-weight: 700; font-size: 1rem; }
+    .cross { color: #ef4444; font-size: 1rem; }
+    .partial { color: #f59e0b; font-size: 0.85rem; }
+
+    /* ===== TESTIMONIALS ===== */
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 24px;
+    }
+    @media (max-width: 640px) {
+      .testimonials-grid { grid-template-columns: 1fr; }
+    }
+    .testimonial-card {
+      padding: 24px;
+      background: #fafafa;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+    }
+    .testimonial-stars {
+      color: var(--gold);
+      font-size: 0.85rem;
+      letter-spacing: 2px;
+      margin-bottom: 12px;
+    }
+    .testimonial-quote {
+      font-size: 0.88rem;
+      color: var(--text);
+      line-height: 1.6;
+      font-style: italic;
+      margin-bottom: 16px;
+    }
+    .testimonial-author {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--black);
+    }
+    .testimonial-biz {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* ===== NEXT STEPS ===== */
+    .cta-box {
+      background: var(--black);
+      color: white;
+      border-radius: var(--radius);
+      padding: 48px 40px;
+      text-align: center;
+      margin-top: 24px;
+    }
+    .cta-box h3 {
+      font-size: 1.6rem;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      margin-bottom: 12px;
+    }
+    .cta-box h3 span { color: var(--gold-light); }
+    .cta-box p {
+      color: rgba(255,255,255,0.55);
+      font-size: 0.92rem;
+      max-width: 440px;
+      margin: 0 auto 28px;
+    }
+    .cta-links {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .cta-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--gold-light);
+      color: var(--black);
+      font-weight: 700;
+      font-size: 0.95rem;
+      padding: 14px 32px;
+      border-radius: 100px;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+    .cta-primary:hover {
+      background: #f0d060;
+      text-decoration: none;
+    }
+    .cta-secondary {
+      font-size: 0.88rem;
+      color: rgba(255,255,255,0.5);
+    }
+    .cta-secondary strong { color: rgba(255,255,255,0.8); }
+
+    /* ===== DISCOUNT CODES ===== */
+    .discount-section {
+      background: #fafafa;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px;
+      margin-top: 24px;
+    }
+    .discount-section h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--black);
+      margin-bottom: 20px;
+    }
+    .codes-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    @media (max-width: 500px) {
+      .codes-grid { grid-template-columns: 1fr; }
+    }
+    .code-card {
+      padding: 20px;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+    }
+    .code-tag {
+      display: inline-block;
+      font-family: 'Courier New', monospace;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--gold);
+      background: var(--gold-bg);
+      padding: 4px 14px;
+      border-radius: 6px;
+      border: 1px solid rgba(200,162,39,0.3);
+      margin-bottom: 10px;
+      letter-spacing: 0.04em;
+    }
+    .code-desc {
+      font-size: 0.85rem;
+      color: var(--text-soft);
+      line-height: 1.5;
+    }
+    .code-desc strong { color: var(--black); }
+
+    /* ===== FOOTER ===== */
+    .doc-footer {
+      padding: 40px 0 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: gap;
+      gap: 16px;
+      border-top: 2px solid var(--gold);
+      margin-top: 8px;
+    }
+    .doc-footer-logo {
+      font-size: 1.1rem;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      color: var(--black);
+    }
+    .doc-footer-logo span { color: var(--gold); }
+    .doc-footer-info {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-align: right;
+    }
+    .doc-footer-info a { color: var(--gold); }
+
+    /* ===== PRINT STYLES ===== */
+    @media print {
+      .print-bar { display: none !important; }
+      body { padding: 0 32px; max-width: 100%; }
+      .cover { min-height: auto; padding: 48px 0 40px; }
+      section { padding: 44px 0; }
+      .roi-box, .cta-box { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .system-card, .testimonial-card, .code-card, .pricing-card { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .page-break { page-break-before: always; }
+      a { color: inherit; }
+      .cta-primary { background: var(--gold-light) !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- PRINT BUTTON -->
+  <div class="print-bar">
+    <button class="print-btn" onclick="window.print()">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/>
+      </svg>
+      Download as PDF
+    </button>
+  </div>
+
+  <!-- ===== COVER ===== -->
+  <div class="cover">
+    <span class="cover-eyebrow">Automation Services for Auto Shops</span>
+    <div class="cover-logo">Apex<span>.</span></div>
+    <div class="cover-sub">Apex Automations &mdash; apexautomations.pro</div>
+    <div class="cover-divider"></div>
+    <h1 class="cover-tagline">We automate the follow-up.<br><em>You keep the customers.</em></h1>
+    <p class="cover-meta">
+      <strong>Missing calls costs shops thousands every year.</strong><br>
+      We fix that — automatically, affordably, and in under a week.
+    </p>
+  </div>
+
+  <!-- ===== THE PROBLEM ===== -->
+  <section>
+    <div class="section-number">01 — The Problem</div>
+    <h2 class="section-title">Missed calls = missed money.</h2>
+    <p class="section-body">Most auto shops are great at fixing cars. They're not great at answering every call, chasing every lead, and following up with every customer. That gap is expensive.</p>
+    <ul class="problem-list">
+      <li>
+        <span class="icon">📵</span>
+        <div class="prob-content">
+          <div class="prob-title">Missed calls go unanswered — and to your competition</div>
+          <div class="prob-desc">When a customer calls and gets no answer or voicemail, they move on. 78% will call the next shop on the list. That job is gone.</div>
+        </div>
+      </li>
+      <li>
+        <span class="icon">🔁</span>
+        <div class="prob-content">
+          <div class="prob-title">One-and-done customers who could have been regulars</div>
+          <div class="prob-desc">Without follow-up, a customer who came in once never has a reason to come back. A simple text sequence can turn a single visit into a long-term relationship.</div>
+        </div>
+      </li>
+      <li>
+        <span class="icon">⭐</span>
+        <div class="prob-content">
+          <div class="prob-title">No reviews, no new customers finding you online</div>
+          <div class="prob-desc">Happy customers rarely leave reviews unless they're asked. Unhappy ones always do. A timely, friendly review request flips that ratio in your favor.</div>
+        </div>
+      </li>
+    </ul>
+  </section>
+
+  <!-- ===== THE APEX SYSTEM ===== -->
+  <section>
+    <div class="section-number">02 — The Apex System</div>
+    <h2 class="section-title">Four automations. One system.</h2>
+    <p class="section-body">We build and manage a four-part automation stack that runs in the background while you're under the hood. No apps to learn. No tech headaches.</p>
+    <div class="system-grid">
+      <div class="system-card">
+        <div class="s-num">01</div>
+        <h3>Missed Call Text-Back</h3>
+        <p>Every missed call gets an instant text message — within seconds. Lets the customer know you'll be with them shortly and keeps them from calling the next shop.</p>
+      </div>
+      <div class="system-card">
+        <div class="s-num">02</div>
+        <h3>After-Hours Auto-Response</h3>
+        <p>Calls and messages outside business hours get a smart automated reply with your hours and a prompt to book or call back — so you never lose a late-night inquiry.</p>
+      </div>
+      <div class="system-card">
+        <div class="s-num">03</div>
+        <h3>Appointment Follow-Up Sequence</h3>
+        <p>After a visit, a short message sequence checks in on the customer, reminds them of upcoming service needs, and keeps your shop top of mind when they need you next.</p>
+      </div>
+      <div class="system-card">
+        <div class="s-num">04</div>
+        <h3>Review Request Campaign</h3>
+        <p>Satisfied customers get a friendly, well-timed ask for a Google review. More 5-star reviews mean more organic traffic and more trust from new customers searching online.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== ROI ===== -->
+  <section class="page-break">
+    <div class="section-number">03 — ROI Example</div>
+    <h2 class="section-title">The math is simple.</h2>
+    <p class="section-body">You don't need to recover every lost call. Recovering just a few pays for the entire service — and then some.</p>
+    <div class="roi-box">
+      <div class="roi-calc">
+        <div class="roi-stat">
+          <div class="roi-label">Missed calls per week</div>
+          <div class="roi-number">5</div>
+          <div class="roi-sub">industry average for busy shops</div>
+        </div>
+        <div class="roi-arrow">×</div>
+        <div class="roi-stat">
+          <div class="roi-label">Avg job value</div>
+          <div class="roi-number">$300</div>
+          <div class="roi-sub">brake job, oil change + service</div>
+        </div>
+        <div class="roi-arrow">=</div>
+        <div class="roi-stat">
+          <div class="roi-label">Lost revenue / year</div>
+          <div class="roi-number">$78K</div>
+          <div class="roi-sub">walking out the door</div>
+        </div>
+      </div>
+      <div class="roi-callout">
+        <p>Apex Automations costs <strong>$297/month</strong> — that's $3,564/year.<br>Recover just <strong>1 missed call per week</strong> and you've already paid for it.</p>
+        <div class="roi-note">*Based on 5 missed calls/week × $300 average job × 52 weeks. Your numbers may vary.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== PRICING ===== -->
+  <section>
+    <div class="section-number">04 — Pricing</div>
+    <h2 class="section-title">One plan. No surprises.</h2>
+    <p class="section-body">Everything is included. No upsells, no feature tiers, no contracts.</p>
+    <div class="pricing-card">
+      <div class="pricing-main">
+        <span class="pricing-badge">All Inclusive</span>
+        <div class="pricing-amount"><sup>$</sup>50<span style="font-size:1.4rem;font-weight:600;letter-spacing:-0.02em"> setup</span></div>
+        <div class="pricing-breakdown">then <span>$297/month</span> — cancel any time</div>
+        <div class="no-contracts">✦ No contracts &nbsp;✦ Month-to-month &nbsp;✦ Cancel any time</div>
+      </div>
+      <div>
+        <ul class="pricing-perks">
+          <li>Missed call text-back automation</li>
+          <li>After-hours auto-response</li>
+          <li>Appointment follow-up sequence</li>
+          <li>Google review request campaign</li>
+          <li>Custom message tone &amp; branding</li>
+          <li>Setup &amp; go-live in 5–7 business days</li>
+          <li>Ongoing support from Roger directly</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== COMPARISON ===== -->
+  <section>
+    <div class="section-number">05 — How We Compare</div>
+    <h2 class="section-title">Apex vs. the alternatives.</h2>
+    <p class="section-body">You have options. Here's how they stack up.</p>
+    <table class="comparison-table">
+      <thead>
+        <tr>
+          <th>Feature</th>
+          <th class="apex-col">⚡ Apex Automations</th>
+          <th>Receptionist</th>
+          <th>DIY Tools</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Missed call text-back</td>
+          <td class="apex-col"><span class="check">✓</span> Instant</td>
+          <td><span class="partial">Maybe</span></td>
+          <td><span class="partial">You set it up</span></td>
+        </tr>
+        <tr>
+          <td>After-hours coverage</td>
+          <td class="apex-col"><span class="check">✓</span> 24/7</td>
+          <td><span class="partial">Business hours only</span></td>
+          <td><span class="partial">If configured</span></td>
+        </tr>
+        <tr>
+          <td>Follow-up sequences</td>
+          <td class="apex-col"><span class="check">✓</span> Done-for-you</td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="partial">You build it</span></td>
+        </tr>
+        <tr>
+          <td>Review requests</td>
+          <td class="apex-col"><span class="check">✓</span> Automated</td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="partial">Separate tool</span></td>
+        </tr>
+        <tr>
+          <td>Setup time</td>
+          <td class="apex-col"><span class="check">✓</span> 5–7 days</td>
+          <td><span class="partial">2–4 weeks</span></td>
+          <td><span class="partial">Weeks to months</span></td>
+        </tr>
+        <tr>
+          <td>Monthly cost</td>
+          <td class="apex-col"><span class="check">✓</span> $297/mo</td>
+          <td><span class="cross">$2,500–4,000+/mo</span></td>
+          <td><span class="partial">$50–500/mo + time</span></td>
+        </tr>
+        <tr>
+          <td>No contract required</td>
+          <td class="apex-col"><span class="check">✓</span> Month-to-month</td>
+          <td><span class="cross">Usually contracted</span></td>
+          <td><span class="check">✓</span></td>
+        </tr>
+        <tr>
+          <td>Industry-specific setup</td>
+          <td class="apex-col"><span class="check">✓</span> Auto shops only</td>
+          <td><span class="partial">Generic</span></td>
+          <td><span class="cross">Generic</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ===== TESTIMONIALS ===== -->
+  <section>
+    <div class="section-number">06 — What Shops Are Saying</div>
+    <h2 class="section-title">Real results, real shops.</h2>
+    <div class="testimonials-grid">
+      <div class="testimonial-card">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-quote">"I used to lose at least 3–4 calls a day when we were slammed in the bay. Now every one of them gets a text back instantly. We've picked up probably 6 new regulars just from that alone."</p>
+        <div class="testimonial-author">Mike T.</div>
+        <div class="testimonial-biz">Owner, Express Auto &amp; Tire</div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-quote">"The review requests were the biggest surprise. Within the first month our Google rating went from 4.1 to 4.7. That alone has brought in new customers. Honestly didn't expect it to matter that much."</p>
+        <div class="testimonial-author">Sandra L.</div>
+        <div class="testimonial-biz">Manager, Lakeside Service Center</div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-quote">"Setup was painless. Roger handled everything, asked good questions, and we were live in less than a week. For $297/month I feel like I have a whole follow-up team working for me."</p>
+        <div class="testimonial-author">James R.</div>
+        <div class="testimonial-biz">Owner, Ridge Road Automotive</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== NEXT STEPS ===== -->
+  <section>
+    <div class="section-number">07 — Next Steps</div>
+    <h2 class="section-title">Ready when you are.</h2>
+    <p class="section-body">No pressure. No sales calls. Just book a free 20-minute demo and see exactly what it looks like for your shop.</p>
+    <div class="cta-box">
+      <h3>Book a free demo at <span>apexautomations.pro</span></h3>
+      <p>We'll show you the exact setup we'd build for your shop — no commitment, no credit card, no fluff.</p>
+      <div class="cta-links">
+        <a href="https://apexautomations.pro" class="cta-primary" target="_blank">
+          apexautomations.pro
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+          </svg>
+        </a>
+        <span class="cta-secondary">Questions? <strong>contact@apexautomations.pro</strong></span>
+      </div>
+    </div>
+
+    <!-- DISCOUNT CODES -->
+    <div class="discount-section" style="margin-top: 32px;">
+      <h3>💰 Special Offer Codes</h3>
+      <div class="codes-grid">
+        <div class="code-card">
+          <div class="code-tag">NOSETUP</div>
+          <div class="code-desc"><strong>Waives the $50 setup fee.</strong> Get started for just $297/month with no upfront cost. Great for shops that want to try it risk-free.</div>
+        </div>
+        <div class="code-card">
+          <div class="code-tag">HALFOFF</div>
+          <div class="code-desc"><strong>50% off your first month.</strong> First month is just $148.50 — then $297/month after. Perfect if you want to see real results before you're all in.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DOC FOOTER -->
+  <div class="doc-footer">
+    <div class="doc-footer-logo">Apex<span>.</span></div>
+    <div class="doc-footer-info">
+      <a href="https://apexautomations.pro">apexautomations.pro</a><br>
+      contact@apexautomations.pro
+    </div>
+  </div>
+
+</body>
+</html>
