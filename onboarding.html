@@ -442,7 +442,7 @@
   <div class="page-header">
     <span class="badge">New Client Setup</span>
     <h1>Let's get you set up <span style="color:var(--gold)">right.</span></h1>
-    <p>Fill this out once — we'll take it from here. The more detail you give us, the better we can tailor everything to your shop.</p>
+    <p>Fill this out once — we'll take it from here. The more detail you give us, the better we can tailor everything to your business.</p>
   </div>
 
   <!-- FORM -->
@@ -453,11 +453,12 @@
       <div class="success-message" id="successMessage">
         <div class="success-icon">✅</div>
         <h2>You're all set!</h2>
-        <p>We received your info and will have your automations configured within 5–7 business days. Roger will reach out if we have any questions.</p>
+        <p>We received your details and building starts now. Roger will reach out if we need anything — otherwise expect an update within 1–2 business days.</p>
       </div>
 
       <form id="onboardingForm" action="https://formspree.io/f/xeewolng" method="POST">
         <input type="hidden" name="_subject" value="New Client Onboarding — Apex Automations" />
+        <input type="hidden" name="plan" id="hiddenPlan" value="" />
 
         <!-- ===== SECTION 1: CONTACT INFO ===== -->
         <div class="section-label">01 — Your Information</div>
@@ -684,6 +685,73 @@
           </div>
         </div>
 
+        <!-- ===== SECTION 5: SCHEDULING (shown for scheduling/bundle-as/bundle-full) ===== -->
+        <div id="section-scheduling" style="display:none;">
+          <div class="section-divider"></div>
+          <div class="section-label">05 — Scheduling Setup</div>
+          <div class="field-group">
+            <div class="field" style="margin-bottom:16px;">
+              <label for="services">Services You Offer + Pricing</label>
+              <textarea id="services" name="services" placeholder="e.g. Haircut — $35, Color — $80, Blowout — $45. List each service and price."></textarea>
+            </div>
+            <div class="field">
+              <label for="calendarType">Calendar You Use</label>
+              <select id="calendarType" name="calendarType">
+                <option value="">Select your calendar</option>
+                <option value="Google Calendar">Google Calendar</option>
+                <option value="Outlook / Microsoft 365">Outlook / Microsoft 365</option>
+                <option value="Apple Calendar">Apple Calendar</option>
+                <option value="I don't use one yet">I don't use one yet</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== SECTION 6: WEBSITE (shown for website/bundle-aw/bundle-full) ===== -->
+        <div id="section-website" style="display:none;">
+          <div class="section-divider"></div>
+          <div class="section-label" id="website-section-num">06 — Website Setup</div>
+          <div class="field-group">
+            <div class="field" style="margin-bottom:16px;">
+              <label for="websiteGoals">What's the main goal of your website?</label>
+              <textarea id="websiteGoals" name="websiteGoals" placeholder="e.g. Get more booking requests, showcase our work, build credibility, sell products online..."></textarea>
+            </div>
+            <div class="field" style="margin-bottom:16px;">
+              <label for="brandColors">Brand Colors <span class="optional">(optional)</span></label>
+              <input type="text" id="brandColors" name="brandColors" placeholder="e.g. Navy blue + gold, or #1a1a2e / #e8c547" />
+            </div>
+            <div class="field" style="margin-bottom:16px;">
+              <label for="logoStatus">Do you have a logo?</label>
+              <select id="logoStatus" name="logoStatus">
+                <option value="">Select</option>
+                <option value="Yes — I'll upload/email it">Yes — I'll upload/email it</option>
+                <option value="Yes but it needs updating">Yes but it needs updating</option>
+                <option value="No — I need one designed">No — I need one designed</option>
+              </select>
+            </div>
+            <div class="field" style="margin-bottom:16px;">
+              <label for="existingPhotos">Do you have photos of your business/work?</label>
+              <select id="existingPhotos" name="existingPhotos">
+                <option value="">Select</option>
+                <option value="Yes — I'll send them over">Yes — I'll send them over</option>
+                <option value="Some — need more">Some — need more</option>
+                <option value="No — please use stock photos">No — please use stock photos</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="domainStatus">Domain / Website situation</label>
+              <select id="domainStatus" name="domainStatus">
+                <option value="">Select</option>
+                <option value="I have a domain already">I have a domain already</option>
+                <option value="I need to buy a domain">I need to buy a domain</option>
+                <option value="I have an existing site to replace">I have an existing site to replace</option>
+                <option value="Not sure — need guidance">Not sure — need guidance</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
         <!-- ===== SUBMIT ===== -->
         <div class="submit-wrap">
           <button type="submit" class="submit-btn">
@@ -705,7 +773,7 @@
   </footer>
 
   <script>
-    // Toggle time inputs visibility via JS for broader browser support
+    // ── Day toggle UI ──
     document.querySelectorAll('.day-toggle').forEach(function(toggle) {
       var row = toggle.closest('.hours-controls');
       function updateRow() {
@@ -723,26 +791,105 @@
       toggle.addEventListener('change', updateRow);
     });
 
-    // Formspree AJAX submission
+    // ── Read plan from URL + show relevant sections ──
+    const urlPlan = new URLSearchParams(window.location.search).get('plan') || '';
+    document.getElementById('hiddenPlan').value = urlPlan;
+
+    const schedulingPlans = ['scheduling', 'bundle-as', 'bundle-full'];
+    const websitePlans    = ['website', 'bundle-aw', 'bundle-full'];
+
+    if (schedulingPlans.includes(urlPlan)) {
+      document.getElementById('section-scheduling').style.display = 'block';
+    }
+    if (websitePlans.includes(urlPlan)) {
+      document.getElementById('section-website').style.display = 'block';
+      // Update section number if scheduling also showing
+      if (schedulingPlans.includes(urlPlan)) {
+        document.getElementById('website-section-num').textContent = '06 — Website Setup';
+      } else {
+        document.getElementById('website-section-num').textContent = '05 — Website Setup';
+      }
+    }
+
+    // ── Form submit ──
     var form = document.getElementById('onboardingForm');
     var successMsg = document.getElementById('successMessage');
+
     form.addEventListener('submit', function(e) {
       e.preventDefault();
-      var data = new FormData(form);
-      fetch(form.action, {
+
+      // Build hours JSON
+      var days = ['mon','tue','wed','thu','fri','sat','sun'];
+      var hoursObj = {};
+      days.forEach(function(d) {
+        var toggle = document.getElementById(d + '_open');
+        var openTime  = form.querySelector('[name="' + d + '_open_time"]');
+        var closeTime = form.querySelector('[name="' + d + '_close_time"]');
+        if (toggle && toggle.checked) {
+          hoursObj[d] = {
+            open: true,
+            openTime:  openTime  ? openTime.value  : '09:00',
+            closeTime: closeTime ? closeTime.value : '17:00',
+          };
+        } else {
+          hoursObj[d] = { open: false };
+        }
+      });
+
+      // Build payload
+      var tone = form.querySelector('input[name="messageTone"]:checked');
+      var payload = {
+        firstName:       form.firstName ? form.firstName.value : (form.querySelector('[name="firstName"]') ? form.querySelector('[name="firstName"]').value : ''),
+        lastName:        form.querySelector('[name="lastName"]')        ? form.querySelector('[name="lastName"]').value        : '',
+        businessEmail:   form.querySelector('[name="businessEmail"]')   ? form.querySelector('[name="businessEmail"]').value   : '',
+        businessName:    form.querySelector('[name="businessName"]')    ? form.querySelector('[name="businessName"]').value    : '',
+        businessPhone:   form.querySelector('[name="businessPhone"]')   ? form.querySelector('[name="businessPhone"]').value   : '',
+        businessAddress: form.querySelector('[name="businessAddress"]') ? form.querySelector('[name="businessAddress"]').value : '',
+        bookingLink:     form.querySelector('[name="bookingLink"]')     ? form.querySelector('[name="bookingLink"]').value     : '',
+        googleProfile:   form.querySelector('[name="googleProfile"]')   ? form.querySelector('[name="googleProfile"]').value   : '',
+        currentCRM:      form.querySelector('[name="currentCRM"]')      ? form.querySelector('[name="currentCRM"]').value      : '',
+        messageTone:     tone ? tone.value : '',
+        additionalInfo:  form.querySelector('[name="additionalInfo"]')  ? form.querySelector('[name="additionalInfo"]').value  : '',
+        plan:            urlPlan,
+        hours:           JSON.stringify(hoursObj),
+        services:        form.querySelector('[name="services"]')        ? form.querySelector('[name="services"]').value        : '',
+        calendarType:    form.querySelector('[name="calendarType"]')    ? form.querySelector('[name="calendarType"]').value    : '',
+        brandColors:     form.querySelector('[name="brandColors"]')     ? form.querySelector('[name="brandColors"]').value     : '',
+        logoStatus:      form.querySelector('[name="logoStatus"]')      ? form.querySelector('[name="logoStatus"]').value      : '',
+        existingPhotos:  form.querySelector('[name="existingPhotos"]')  ? form.querySelector('[name="existingPhotos"]').value  : '',
+        domainStatus:    form.querySelector('[name="domainStatus"]')    ? form.querySelector('[name="domainStatus"]').value    : '',
+        websiteGoals:    form.querySelector('[name="websiteGoals"]')    ? form.querySelector('[name="websiteGoals"]').value    : '',
+      };
+
+      var btn = form.querySelector('.submit-btn');
+      btn.disabled = true;
+      btn.textContent = 'Submitting…';
+
+      var API_URL = window.location.hostname === 'localhost'
+        ? 'http://localhost:3000/api/onboarding'
+        : 'https://apex-automations-two.vercel.app/api/onboarding';
+
+      fetch(API_URL, {
         method: 'POST',
-        body: data,
-        headers: { 'Accept': 'application/json' }
-      }).then(function(res) {
-        if (res.ok) {
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      })
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        if (data.success) {
           form.style.display = 'none';
           successMsg.style.display = 'block';
           window.scrollTo({ top: 0, behavior: 'smooth' });
         } else {
-          alert('Something went wrong. Please try again or email contact@apexautomations.pro directly.');
+          btn.disabled = false;
+          btn.textContent = 'Submit Onboarding Info';
+          alert('Something went wrong: ' + (data.error || 'Please try again.'));
         }
-      }).catch(function() {
-        alert('Network error. Please try again.');
+      })
+      .catch(function() {
+        btn.disabled = false;
+        btn.textContent = 'Submit Onboarding Info';
+        alert('Network error. Please try again or email contact@apexautomations.pro directly.');
       });
     });
   </script>

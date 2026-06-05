@@ -4,6 +4,7 @@
   "description": "Apex Automations — backend API",
   "main": "api/checkout.js",
   "dependencies": {
+    "@supabase/supabase-js": "^2.0.0",
     "resend": "^3.0.0",
     "stripe": "^14.0.0"
   }

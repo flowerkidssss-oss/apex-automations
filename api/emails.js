@@ -459,4 +459,302 @@ function getOnboardingEmail(plan, customerData) {
   return template;
 }
 
-module.exports = { getOnboardingEmail };
+module.exports = { getOnboardingEmail, getBuildBriefEmail, getClientConfirmationEmail };
+
+// ─────────────────────────────────────────────
+// getBuildBriefEmail — internal work order for Roger
+// ─────────────────────────────────────────────
+function getBuildBriefEmail(clientData) {
+  const plan = clientData.plan || 'unknown';
+
+  const planColors = {
+    'automation':  { bg: '#1e3a5f', text: '#60a5fa', label: 'Automation' },
+    'scheduling':  { bg: '#1a3a2a', text: '#4ade80', label: 'Scheduling' },
+    'website':     { bg: '#3a1a3a', text: '#c084fc', label: 'Website' },
+    'bundle-as':   { bg: '#1e2a4a', text: '#818cf8', label: 'Bundle — Automation + Scheduling' },
+    'bundle-aw':   { bg: '#2a1a3a', text: '#f472b6', label: 'Bundle — Automation + Website' },
+    'bundle-full': { bg: '#3a2a0a', text: '#fbbf24', label: 'Full Stack Bundle' },
+  };
+  const planStyle = planColors[plan] || { bg: '#374151', text: '#d1d5db', label: plan };
+
+  // Render hours JSON into a table
+  function renderHours(hoursStr) {
+    if (!hoursStr) return '<p style="margin:0;font-size:13px;color:#6b7280;">See additional info</p>';
+    let hoursObj;
+    try { hoursObj = JSON.parse(hoursStr); } catch(e) { return `<p style="margin:0;font-size:13px;color:#374151;">${hoursStr}</p>`; }
+    const dayLabels = { mon:'Monday', tue:'Tuesday', wed:'Wednesday', thu:'Thursday', fri:'Friday', sat:'Saturday', sun:'Sunday' };
+    const rows = Object.entries(dayLabels).map(([key, label]) => {
+      const d = hoursObj[key];
+      if (!d) return '';
+      const val = d.open ? `${d.openTime || '?'} – ${d.closeTime || '?'}` : '<span style="color:#9ca3af;font-style:italic;">Closed</span>';
+      return `<tr>
+        <td style="padding:6px 12px 6px 0;font-size:13px;font-weight:600;color:#374151;width:110px;">${label}</td>
+        <td style="padding:6px 0;font-size:13px;color:#111827;">${val}</td>
+      </tr>`;
+    }).join('');
+    return `<table cellpadding="0" cellspacing="0" style="width:100%;">${rows}</table>`;
+  }
+
+  // Plan-specific sections
+  function planSections() {
+    let html = '';
+    const isScheduling = ['scheduling','bundle-as','bundle-full'].includes(plan);
+    const isWebsite = ['website','bundle-aw','bundle-full'].includes(plan);
+    if (isScheduling) {
+      html += `
+      <tr><td style="padding:20px 0 0;">
+        <p style="margin:0 0 8px;font-size:13px;font-weight:700;color:#111827;text-transform:uppercase;letter-spacing:0.05em;">Scheduling</p>
+        <table width="100%" cellpadding="0" cellspacing="0">
+          <tr><td style="padding:4px 0;font-size:13px;color:#6b7280;width:160px;">Services + Pricing</td><td style="font-size:13px;color:#111827;">${clientData.services || '<em style="color:#9ca3af;">Not provided</em>'}</td></tr>
+          <tr><td style="padding:4px 0;font-size:13px;color:#6b7280;">Calendar Type</td><td style="font-size:13px;color:#111827;">${clientData.calendar_type || '<em style="color:#9ca3af;">Not provided</em>'}</td></tr>
+        </table>
+      </td></tr>`;
+    }
+    if (isWebsite) {
+      html += `
+      <tr><td style="padding:20px 0 0;">
+        <p style="margin:0 0 8px;font-size:13px;font-weight:700;color:#111827;text-transform:uppercase;letter-spacing:0.05em;">Website</p>
+        <table width="100%" cellpadding="0" cellspacing="0">
+          <tr><td style="padding:4px 0;font-size:13px;color:#6b7280;width:160px;">Brand Colors</td><td style="font-size:13px;color:#111827;">${clientData.brand_colors || '<em style="color:#9ca3af;">Not provided</em>'}</td></tr>
+          <tr><td style="padding:4px 0;font-size:13px;color:#6b7280;">Logo Status</td><td style="font-size:13px;color:#111827;">${clientData.logo_status || '<em style="color:#9ca3af;">Not provided</em>'}</td></tr>
+          <tr><td style="padding:4px 0;font-size:13px;color:#6b7280;">Existing Photos</td><td style="font-size:13px;color:#111827;">${clientData.existing_photos || '<em style="color:#9ca3af;">Not provided</em>'}</td></tr>
+          <tr><td style="padding:4px 0;font-size:13px;color:#6b7280;">Domain Status</td><td style="font-size:13px;color:#111827;">${clientData.domain_status || '<em style="color:#9ca3af;">Not provided</em>'}</td></tr>
+          <tr><td style="padding:4px 0;font-size:13px;color:#6b7280;">Website Goals</td><td style="font-size:13px;color:#111827;">${clientData.website_goals || '<em style="color:#9ca3af;">Not provided</em>'}</td></tr>
+        </table>
+      </td></tr>`;
+    }
+    return html;
+  }
+
+  // Action checklist per plan
+  function actionItems() {
+    const lists = {
+      'automation':  ['Set up GHL sub-account (or platform)', 'Configure missed call text-back', 'Build follow-up sequences', 'Set up review requests', 'Test all flows', 'Schedule go-live call'],
+      'scheduling':  ['Build booking page', 'Connect calendar', 'Configure services + availability', 'Set up reminders', 'Test booking flow', 'Go-live call'],
+      'website':     ['Create staging site', 'Design based on brief', 'Send review link to client', 'Apply feedback', 'Final approval', 'Launch'],
+      'bundle-as':   ['Set up GHL sub-account (or platform)', 'Configure missed call text-back', 'Build follow-up sequences', 'Set up review requests', 'Build booking page', 'Connect calendar', 'Configure services + availability', 'Set up reminders', 'Test all flows', 'Schedule go-live call'],
+      'bundle-aw':   ['Set up GHL sub-account (or platform)', 'Configure missed call text-back', 'Build follow-up sequences', 'Set up review requests', 'Create staging site', 'Design based on brief', 'Send review link to client', 'Apply feedback', 'Final approval', 'Launch'],
+      'bundle-full': ['Set up GHL sub-account (or platform)', 'Configure missed call text-back', 'Build follow-up sequences', 'Set up review requests', 'Build booking page', 'Connect calendar', 'Configure services + availability', 'Set up reminders', 'Create staging site', 'Design based on brief', 'Send review link to client', 'Apply feedback', 'Test all flows', 'Final approval', 'Launch'],
+    };
+    const items = lists[plan] || ['Review submission and contact client within 24 hours'];
+    return items.map(item => `
+      <tr>
+        <td style="padding:6px 0;vertical-align:top;">
+          <table cellpadding="0" cellspacing="0">
+            <tr>
+              <td style="vertical-align:top;padding-right:10px;padding-top:1px;">
+                <span style="display:inline-block;width:18px;height:18px;border-radius:3px;border:2px solid #d1d5db;background:#fff;"></span>
+              </td>
+              <td style="vertical-align:middle;">
+                <span style="font-size:13px;color:#374151;">${item}</span>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>`).join('');
+  }
+
+  const html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Build Brief — ${clientData.business_name}</title>
+</head>
+<body style="margin:0;padding:0;background-color:#f3f4f6;font-family:Arial,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f3f4f6;padding:32px 16px;">
+    <tr>
+      <td align="center">
+        <table width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;background-color:#ffffff;border-radius:12px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.1);">
+
+          <!-- Header -->
+          <tr>
+            <td style="background-color:#111827;padding:24px 32px;">
+              <p style="margin:0 0 4px;font-size:11px;font-weight:700;color:#9ca3af;letter-spacing:0.1em;text-transform:uppercase;">Internal Work Order</p>
+              <p style="margin:0 0 10px;font-size:22px;font-weight:700;color:#ffffff;">🔧 New Build Brief</p>
+              <span style="display:inline-block;padding:4px 14px;border-radius:100px;background-color:${planStyle.bg};color:${planStyle.text};font-size:12px;font-weight:700;">${planStyle.label}</span>
+            </td>
+          </tr>
+
+          <!-- Body -->
+          <tr>
+            <td style="padding:32px;">
+
+              <!-- Business name -->
+              <p style="margin:0 0 24px;font-size:20px;font-weight:700;color:#111827;">${clientData.business_name}</p>
+
+              <!-- Client Details -->
+              <p style="margin:0 0 10px;font-size:12px;font-weight:700;color:#111827;text-transform:uppercase;letter-spacing:0.07em;border-bottom:2px solid #111827;padding-bottom:6px;">Client Details</p>
+              <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:24px;">
+                <tr><td style="padding:5px 0;font-size:13px;color:#6b7280;width:160px;">Name</td><td style="font-size:13px;color:#111827;font-weight:600;">${clientData.first_name} ${clientData.last_name}</td></tr>
+                <tr><td style="padding:5px 0;font-size:13px;color:#6b7280;">Email</td><td style="font-size:13px;color:#111827;"><a href="mailto:${clientData.email}" style="color:#2563eb;">${clientData.email}</a></td></tr>
+                <tr><td style="padding:5px 0;font-size:13px;color:#6b7280;">Phone</td><td style="font-size:13px;color:#111827;">${clientData.business_phone || '<em style="color:#9ca3af;">Not provided</em>'}</td></tr>
+                <tr><td style="padding:5px 0;font-size:13px;color:#6b7280;">Address</td><td style="font-size:13px;color:#111827;">${clientData.business_address || '<em style="color:#9ca3af;">Not provided</em>'}</td></tr>
+              </table>
+
+              <!-- Plan + Details -->
+              <p style="margin:0 0 10px;font-size:12px;font-weight:700;color:#111827;text-transform:uppercase;letter-spacing:0.07em;border-bottom:2px solid #111827;padding-bottom:6px;">Build Details</p>
+              <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:24px;">
+                <tr><td style="padding:5px 0;font-size:13px;color:#6b7280;width:160px;">Message Tone</td><td style="font-size:13px;color:#111827;">${clientData.message_tone || '<em style="color:#9ca3af;">Not specified</em>'}</td></tr>
+                <tr><td style="padding:5px 0;font-size:13px;color:#6b7280;">Current CRM</td><td style="font-size:13px;color:#111827;">${clientData.current_crm || '<em style="color:#9ca3af;">None provided</em>'}</td></tr>
+                <tr><td style="padding:5px 0;font-size:13px;color:#6b7280;">Booking Link</td><td style="font-size:13px;color:#111827;">${clientData.booking_link ? `<a href="${clientData.booking_link}" style="color:#2563eb;">${clientData.booking_link}</a>` : '<em style="color:#9ca3af;">Not provided</em>'}</td></tr>
+                <tr><td style="padding:5px 0;font-size:13px;color:#6b7280;">Google Profile</td><td style="font-size:13px;color:#111827;">${clientData.google_profile ? `<a href="${clientData.google_profile}" style="color:#2563eb;">${clientData.google_profile}</a>` : '<em style="color:#9ca3af;">Not provided</em>'}</td></tr>
+                ${planSections()}
+              </table>
+
+              <!-- Business Hours -->
+              <p style="margin:0 0 10px;font-size:12px;font-weight:700;color:#111827;text-transform:uppercase;letter-spacing:0.07em;border-bottom:2px solid #111827;padding-bottom:6px;">Business Hours</p>
+              <div style="margin-bottom:24px;">${renderHours(clientData.hours)}</div>
+
+              <!-- Additional Notes -->
+              <p style="margin:0 0 10px;font-size:12px;font-weight:700;color:#111827;text-transform:uppercase;letter-spacing:0.07em;border-bottom:2px solid #111827;padding-bottom:6px;">Additional Notes</p>
+              <p style="margin:0 0 24px;font-size:13px;color:#374151;line-height:1.6;">${clientData.additional_info || '<em style="color:#9ca3af;">None</em>'}</p>
+
+              <!-- Action Items -->
+              <div style="background-color:#f9fafb;border-radius:8px;padding:20px 24px;border:1px solid #e5e7eb;">
+                <p style="margin:0 0 14px;font-size:13px;font-weight:700;color:#111827;">✅ Action Items — ${planStyle.label}</p>
+                <table width="100%" cellpadding="0" cellspacing="0">
+                  ${actionItems()}
+                </table>
+              </div>
+
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="background-color:#f9fafb;padding:16px 32px;border-top:1px solid #e5e7eb;">
+              <p style="margin:0;font-size:11px;color:#9ca3af;text-align:center;">Apex Automations Internal System — apexautomations.pro</p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;
+
+  return {
+    subject: `🔧 Build Brief: ${clientData.business_name} — ${clientData.plan}`,
+    html,
+  };
+}
+
+// ─────────────────────────────────────────────
+// getClientConfirmationEmail — warm confirmation to client
+// ─────────────────────────────────────────────
+function getClientConfirmationEmail(clientData) {
+  const plan = clientData.plan || 'unknown';
+  const isWebsite = ['website','bundle-aw','bundle-full'].includes(plan);
+  const timeline = isWebsite ? '10–14 business days' : '5–7 business days';
+
+  const planLabels = {
+    'automation':  'Automation System',
+    'scheduling':  'Scheduling System',
+    'website':     'Website Build',
+    'bundle-as':   'Automation + Scheduling Bundle',
+    'bundle-aw':   'Automation + Website Bundle',
+    'bundle-full': 'Full Stack Bundle',
+  };
+  const planLabel = planLabels[plan] || plan;
+
+  const html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>We've got everything we need</title>
+</head>
+<body style="margin:0;padding:0;background-color:#f3f4f6;font-family:Arial,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f3f4f6;padding:32px 16px;">
+    <tr>
+      <td align="center">
+        <table width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;background-color:#ffffff;border-radius:12px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.1);">
+
+          <!-- Header -->
+          <tr>
+            <td style="background-color:#111827;padding:28px 32px;">
+              <p style="margin:0;font-size:22px;font-weight:700;color:#ffffff;">Apex Automations</p>
+              <p style="margin:4px 0 0;font-size:13px;color:#9ca3af;">apexautomations.pro</p>
+            </td>
+          </tr>
+
+          <!-- Body -->
+          <tr>
+            <td style="padding:32px;">
+
+              <p style="margin:0 0 8px;font-size:24px;font-weight:700;color:#111827;">Hey ${clientData.first_name} — we're on it. ✅</p>
+              <p style="margin:0 0 24px;font-size:15px;color:#6b7280;">We received your onboarding info and we're already getting started.</p>
+
+              <p style="margin:0 0 20px;font-size:15px;color:#374151;line-height:1.6;">
+                Everything looks good on our end. Here's what you can expect from here:
+              </p>
+
+              <!-- What happens next -->
+              <div style="background-color:#f9fafb;border-left:4px solid #111827;border-radius:4px;padding:16px 20px;margin:0 0 24px;">
+                <p style="margin:0 0 4px;font-size:14px;font-weight:700;color:#111827;">⚡ Timeline: ${timeline} to go live.</p>
+                <p style="margin:0;font-size:13px;color:#6b7280;">We'll reach out before anything goes live for your review.</p>
+              </div>
+
+              <!-- What we have on file -->
+              <p style="margin:0 0 10px;font-size:14px;font-weight:700;color:#111827;">Here's what we have on file:</p>
+              <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:24px;background:#f9fafb;border-radius:8px;border:1px solid #e5e7eb;">
+                <tr><td style="padding:10px 16px;font-size:13px;color:#6b7280;border-bottom:1px solid #e5e7eb;width:140px;">Business</td><td style="padding:10px 16px;font-size:13px;color:#111827;font-weight:600;border-bottom:1px solid #e5e7eb;">${clientData.business_name}</td></tr>
+                <tr><td style="padding:10px 16px;font-size:13px;color:#6b7280;border-bottom:1px solid #e5e7eb;">Plan</td><td style="padding:10px 16px;font-size:13px;color:#111827;border-bottom:1px solid #e5e7eb;">${planLabel}</td></tr>
+                <tr><td style="padding:10px 16px;font-size:13px;color:#6b7280;border-bottom:1px solid #e5e7eb;">Phone</td><td style="padding:10px 16px;font-size:13px;color:#111827;border-bottom:1px solid #e5e7eb;">${clientData.business_phone || 'Not provided'}</td></tr>
+                <tr><td style="padding:10px 16px;font-size:13px;color:#6b7280;">Message Tone</td><td style="padding:10px 16px;font-size:13px;color:#111827;">${clientData.message_tone || 'Not specified'}</td></tr>
+              </table>
+
+              <!-- What to expect -->
+              <p style="margin:0 0 10px;font-size:14px;font-weight:700;color:#111827;">What to expect from us:</p>
+              <ul style="margin:0 0 24px;padding-left:20px;">
+                <li style="margin-bottom:8px;font-size:14px;color:#374151;">We'll reach out if we need anything — otherwise we build and send you a review link before anything goes live.</li>
+                <li style="margin-bottom:8px;font-size:14px;color:#374151;">You'll get a chance to review everything and give feedback before launch.</li>
+                <li style="margin-bottom:8px;font-size:14px;color:#374151;">Once you approve, we flip the switch and you're live.</li>
+              </ul>
+
+              <div style="background-color:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:16px 20px;margin:0 0 24px;">
+                <p style="margin:0;font-size:14px;color:#166534;font-weight:600;">No action needed from you right now — sit tight and we'll be in touch.</p>
+              </div>
+
+              <!-- Signature -->
+              <table style="margin-top:32px;border-top:1px solid #e5e7eb;padding-top:20px;width:100%;">
+                <tr>
+                  <td>
+                    <p style="margin:0;font-size:15px;font-weight:700;color:#111827;">Roger Canales</p>
+                    <p style="margin:2px 0 0;font-size:13px;color:#6b7280;">Founder, Apex Automations</p>
+                    <p style="margin:8px 0 0;font-size:13px;color:#374151;">📧 contact@apexautomations.pro</p>
+                    <p style="margin:2px 0 0;font-size:13px;color:#374151;">📱 Available via email — we respond within 2 hours</p>
+                    <p style="margin:2px 0 0;font-size:13px;color:#374151;">🌐 apexautomations.pro</p>
+                  </td>
+                </tr>
+              </table>
+
+              <p style="margin:24px 0 0;font-size:13px;color:#6b7280;font-style:italic;">
+                <strong>P.S.</strong> — If anything changes or you need to add info, just reply to this email.
+              </p>
+
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="background-color:#f9fafb;padding:20px 32px;border-top:1px solid #e5e7eb;">
+              <p style="margin:0;font-size:12px;color:#9ca3af;text-align:center;">
+                You're receiving this because you submitted onboarding info to Apex Automations.<br>
+                Questions? Reply directly to this email or reach us at contact@apexautomations.pro
+              </p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;
+
+  return {
+    subject: `We've got everything we need — building starts now ✅`,
+    html,
+  };
+}
