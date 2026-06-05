@@ -553,21 +553,21 @@
       <div class="summary-card">
         <div class="summary-plan">
           <div class="plan-badge">The Apex System</div>
-          <div class="plan-name" id="summaryPlanName">Starter Package</div>
+          <div class="plan-name" id="summaryPlanName">The Apex System</div>
           <div class="plan-desc" id="summaryPlanDesc">Everything you need to stop losing leads and start filling your calendar on autopilot.</div>
         </div>
         <div class="summary-pricing">
-          <div class="price-row" id="summarySetupRow">
+          <div class="price-row">
             <span>One-time setup fee</span>
-            <span class="amount">$1,500</span>
+            <span class="amount">$50</span>
           </div>
-          <div class="price-row" id="summaryMonthlyRow">
-            <span>Monthly retainer</span>
-            <span class="amount" id="summaryMonthlyAmount">$497/mo</span>
+          <div class="price-row">
+            <span>First month</span>
+            <span class="amount">$297</span>
           </div>
           <div class="price-row total">
             <span>Due today</span>
-            <span class="amount" id="summaryTotal">$1,997</span>
+            <span class="amount">$347</span>
           </div>
         </div>
         <div class="summary-features">
@@ -590,40 +590,17 @@
     <!-- RIGHT: FORM -->
     <div class="checkout-form-wrap">
 
-      <!-- PLAN SELECTOR -->
+      <!-- PLAN -->
       <div class="form-section">
-        <div class="form-section-title">Choose Your Plan</div>
-        <div class="plan-selector">
-
-          <label class="plan-option selected" id="planStarter">
-            <input type="radio" name="plan" value="starter" checked />
-            <div class="plan-option-info">
-              <div class="plan-option-name">Starter</div>
-              <div class="plan-option-desc">$1,500 setup + $497/mo</div>
-            </div>
-            <div class="plan-option-price">$1,997 today</div>
-          </label>
-
-          <label class="plan-option" id="planGrowth">
-            <span class="plan-popular">Most Popular</span>
-            <input type="radio" name="plan" value="growth" />
-            <div class="plan-option-info">
-              <div class="plan-option-name">Growth</div>
-              <div class="plan-option-desc">$1,500 setup + $797/mo</div>
-            </div>
-            <div class="plan-option-price">$2,297 today</div>
-          </label>
-
-          <label class="plan-option" id="planDFY">
-            <input type="radio" name="plan" value="dfy" />
-            <div class="plan-option-info">
-              <div class="plan-option-name">Done-For-You</div>
-              <div class="plan-option-desc">$1,500 setup + $1,497/mo</div>
-            </div>
-            <div class="plan-option-price">$2,997 today</div>
-          </label>
-
+        <div class="form-section-title">Your Plan</div>
+        <div class="plan-option selected" style="cursor:default;">
+          <div class="plan-option-info">
+            <div class="plan-option-name">⚡ The Apex System</div>
+            <div class="plan-option-desc">$50 one-time setup + $297/mo — cancel anytime</div>
+          </div>
+          <div class="plan-option-price">$347 today</div>
         </div>
+        <input type="hidden" name="plan" value="starter" />
       </div>
 
       <!-- CONTACT INFO -->
@@ -687,7 +664,7 @@
       <div class="submit-section">
         <button class="btn-pay" id="submitBtn">
           <div class="spinner"></div>
-          <span class="btn-text" id="btnText">Pay $1,997 — Start My Automation</span>
+          <span class="btn-text" id="btnText">Pay $347 — Start My Automation</span>
         </button>
         <div class="security-badges">
           <span>🔒 SSL Encrypted</span>
