@@ -36,7 +36,15 @@ module.exports = async (req, res) => {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { paymentMethodId, plan, email, name, phone, business } = req.body;
+  const { paymentMethodId, plan, email, name, phone, business, discountCode } = req.body;
+
+  // Apply discount codes
+  const CODES = {
+    'NOSETUP': { type: 'waive_setup',  amountCents: 29700 }, // waive $50 setup, charge $297 only
+    'HALFOFF': { type: 'half_first',   amountCents: 19800 }, // 50% off first month = $148.50 + $50 = $198
+  };
+
+  const discount = discountCode ? CODES[discountCode.toUpperCase()] : null;
 
   if (!paymentMethodId || !plan || !email || !name) {
     return res.status(400).json({ error: 'Missing required fields.' });
@@ -58,9 +66,10 @@ module.exports = async (req, res) => {
       metadata: { business, plan },
     });
 
-    // 2. Charge the one-time setup fee + first month upfront
+    // 2. Charge the one-time setup fee + first month upfront (with discount if applied)
+    const chargeAmount = discount ? discount.amountCents : selectedPlan.amountCents;
     const paymentIntent = await stripe.paymentIntents.create({
-      amount: selectedPlan.amountCents,
+      amount: chargeAmount,
       currency: 'usd',
       customer: customer.id,
       payment_method: paymentMethodId,

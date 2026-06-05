@@ -439,6 +439,89 @@
       gap: 0.3rem;
     }
 
+    /* ─── DISCOUNT ─── */
+    .discount-wrap {
+      display: flex;
+      gap: 0.75rem;
+    }
+
+    .discount-wrap input {
+      flex: 1;
+      background: #0a0a0a;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      outline: none;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      transition: border-color var(--transition), box-shadow var(--transition);
+    }
+
+    .discount-wrap input:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(232,197,71,0.12);
+    }
+
+    .discount-wrap input::placeholder { color: #444; text-transform: none; letter-spacing: 0; }
+
+    .btn-apply {
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.75rem 1.25rem;
+      color: var(--muted);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: border-color var(--transition), color var(--transition);
+      white-space: nowrap;
+    }
+
+    .btn-apply:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+
+    .discount-msg {
+      font-size: 0.82rem;
+      margin-top: 0.5rem;
+      display: none;
+    }
+
+    .discount-msg.success { color: #4ade80; display: block; }
+    .discount-msg.error   { color: #f87171; display: block; }
+
+    .discount-applied {
+      background: rgba(74,222,128,0.08);
+      border: 1px solid rgba(74,222,128,0.25);
+      border-radius: 8px;
+      padding: 0.6rem 1rem;
+      font-size: 0.85rem;
+      color: #4ade80;
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 0.75rem;
+    }
+
+    .discount-applied.visible { display: flex; }
+
+    .discount-remove {
+      background: none;
+      border: none;
+      color: #666;
+      cursor: pointer;
+      font-size: 1rem;
+      padding: 0;
+      line-height: 1;
+    }
+
+    .discount-remove:hover { color: #f87171; }
+
     /* ─── ERROR / SUCCESS ─── */
     .form-error {
       background: rgba(220,38,38,0.08);
@@ -565,9 +648,13 @@
             <span>First month</span>
             <span class="amount">$297</span>
           </div>
+          <div class="price-row" id="discountRow" style="display:none;color:#4ade80;">
+            <span id="discountRowLabel">Discount</span>
+            <span id="discountRowAmount" style="color:#4ade80;font-weight:600;"></span>
+          </div>
           <div class="price-row total">
             <span>Due today</span>
-            <span class="amount">$347</span>
+            <span class="amount" id="summaryTotal">$347</span>
           </div>
         </div>
         <div class="summary-features">
@@ -629,6 +716,20 @@
         <div class="form-group">
           <label for="business">Business Name</label>
           <input type="text" id="business" placeholder="Smith's Auto Detail" required />
+        </div>
+      </div>
+
+      <!-- DISCOUNT CODE -->
+      <div class="form-section">
+        <div class="form-section-title">Discount Code</div>
+        <div class="discount-wrap">
+          <input type="text" id="discountInput" placeholder="Enter code" maxlength="30" />
+          <button type="button" class="btn-apply" id="applyBtn">Apply</button>
+        </div>
+        <div class="discount-msg" id="discountMsg"></div>
+        <div class="discount-applied" id="discountApplied">
+          <span id="discountAppliedText"></span>
+          <button class="discount-remove" id="removeDiscount" title="Remove">✕</button>
         </div>
       </div>
 
@@ -773,6 +874,59 @@
 
     let selectedPlan = 'starter';
 
+    // ─── DISCOUNT CODES ───
+    const CODES = {
+      'NOSETUP':   { type: 'waive_setup',    label: '✓ Setup fee waived!',         discount: 50,  newTotal: 297 },
+      'HALFOFF':   { type: 'half_first',     label: '✓ 50% off first month!',       discount: 149, newTotal: 198 },
+    };
+
+    let appliedCode = null;
+
+    document.getElementById('applyBtn').addEventListener('click', applyDiscount);
+    document.getElementById('discountInput').addEventListener('keydown', e => { if (e.key === 'Enter') applyDiscount(); });
+    document.getElementById('removeDiscount').addEventListener('click', removeDiscount);
+
+    function applyDiscount() {
+      const raw  = document.getElementById('discountInput').value.trim().toUpperCase();
+      const msg  = document.getElementById('discountMsg');
+      const code = CODES[raw];
+
+      if (!raw) return;
+
+      if (!code) {
+        msg.textContent = '✕ Invalid code. Please try again.';
+        msg.className = 'discount-msg error';
+        return;
+      }
+
+      appliedCode = { ...code, code: raw };
+      msg.className = 'discount-msg';
+
+      // Show applied banner
+      document.getElementById('discountAppliedText').textContent = code.label;
+      document.getElementById('discountApplied').classList.add('visible');
+      document.getElementById('discountInput').value = '';
+      document.getElementById('discountInput').disabled = true;
+      document.getElementById('applyBtn').disabled = true;
+
+      // Update order summary
+      document.getElementById('discountRow').style.display = 'flex';
+      document.getElementById('discountRowLabel').textContent = raw === 'NOSETUP' ? 'Setup fee waived' : '50% off first month';
+      document.getElementById('discountRowAmount').textContent = '-$' + code.discount;
+      document.getElementById('summaryTotal').textContent = '$' + code.newTotal;
+      document.getElementById('btnText').textContent = 'Pay $' + code.newTotal + ' — Start My Automation';
+    }
+
+    function removeDiscount() {
+      appliedCode = null;
+      document.getElementById('discountApplied').classList.remove('visible');
+      document.getElementById('discountRow').style.display = 'none';
+      document.getElementById('discountInput').disabled = false;
+      document.getElementById('applyBtn').disabled = false;
+      document.getElementById('summaryTotal').textContent = '$347';
+      document.getElementById('btnText').textContent = 'Pay $347 — Start My Automation';
+    }
+
     // ─── PLAN SELECTION ───
     document.querySelectorAll('input[name="plan"]').forEach(radio => {
       radio.addEventListener('change', () => {
@@ -853,6 +1007,7 @@
             name: `${firstName} ${lastName}`,
             phone,
             business,
+            discountCode: appliedCode ? appliedCode.code : null,
           })
         });
 
