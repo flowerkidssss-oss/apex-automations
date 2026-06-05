@@ -965,7 +965,7 @@
         name: 'Automation System',
         badge: 'AI Automation',
         desc: 'Full done-for-you AI follow-up, missed call text-back, and review automation.',
-        setup: 199,
+        setup: 299,
         monthly: 297,
         yearlyMonthly: 223,
         isOneTime: false,
@@ -983,7 +983,7 @@
         name: 'Scheduling System',
         badge: 'Scheduling',
         desc: 'Done-for-you online booking, calendar sync, and automated reminders.',
-        setup: 399,
+        setup: 499,
         monthly: 197,
         yearlyMonthly: 148,
         isOneTime: false,
@@ -1019,9 +1019,9 @@
         name: 'Automation + Scheduling Bundle',
         badge: 'Bundle',
         desc: 'Capture leads and book them automatically — two systems working together.',
-        setup: 499,
-        monthly: 447,
-        yearlyMonthly: 335,
+        setup: 699,
+        monthly: 347,
+        yearlyMonthly: 260,
         isOneTime: false,
         features: [
           'Everything in Automation System',
@@ -1029,7 +1029,7 @@
           'Unified lead + booking dashboard',
           'Priority support',
           'Save $99 on setup vs separate',
-          'Save $47/mo vs separate',
+          'Save $100/mo vs separate',
           'Live within 5–7 business days',
         ]
       },
@@ -1037,7 +1037,7 @@
         name: 'Automation + Website Bundle',
         badge: 'Bundle',
         desc: 'Get found online and never miss a lead — automation and a new site.',
-        setup: 1299,
+        setup: 1399,
         monthly: 297,
         yearlyMonthly: 223,
         isOneTime: false,
@@ -1055,7 +1055,7 @@
         name: 'Full Stack Bundle',
         badge: '⭐ Most Popular',
         desc: 'Everything — website, automation, and scheduling — at our best price.',
-        setup: 1699,
+        setup: 1799,
         monthly: 447,
         yearlyMonthly: 335,
         isOneTime: false,
@@ -1082,10 +1082,10 @@
     // YEARLY10: extra 10% off when yearly billing selected
     // STACKSETUP: 30% off bundle-full setup fee only
     const CODES = {
-      'NOSETUP':    { type: 'waive_setup',    label: '✓ Setup fee waived!', excludePlans: ['bundle-full'] },
+      'NOSETUP':    { type: 'waive_setup',    label: '✓ Setup fee waived!', excludePlans: ['bundle-aw', 'bundle-full'] },
       'HALFOFF':    { type: 'half_first',     label: '✓ 50% off first month!' },
       'YEARLY10':   { type: 'yearly10',       label: '✓ Extra 10% off yearly billing!' },
-      'STACKSETUP': { type: 'stack_setup30',  label: '✓ 30% off Full Stack setup fee!', onlyPlans: ['bundle-full'] },
+      'STACKSETUP': { type: 'stack_setup30',  label: '✓ 30% off setup fee!', onlyPlans: ['bundle-aw', 'bundle-full'] },
     };
 
     // ─── BILLING TOGGLE ───
@@ -1261,16 +1261,16 @@
           if (appliedCode.type === 'yearly10' && !isYearly) {
             removeDiscount();
           }
-          // NOSETUP: remove if switching to bundle-full
+          // NOSETUP: remove if switching to bundle-aw or bundle-full
           if (appliedCode.type === 'waive_setup' && appliedCode.excludePlans && appliedCode.excludePlans.includes(selectedPlan)) {
             removeDiscount();
-            document.getElementById('discountMsg').textContent = 'ℹ️ NOSETUP cannot be used on the Full Stack Bundle. Try STACKSETUP instead.';
+            document.getElementById('discountMsg').textContent = 'ℹ️ NOSETUP cannot be used on bundle packages. Try STACKSETUP instead.';
             document.getElementById('discountMsg').className = 'discount-msg error';
           }
-          // STACKSETUP: remove if switching away from bundle-full
+          // STACKSETUP: remove if switching away from bundle-aw or bundle-full
           if (appliedCode.type === 'stack_setup30' && appliedCode.onlyPlans && !appliedCode.onlyPlans.includes(selectedPlan)) {
             removeDiscount();
-            document.getElementById('discountMsg').textContent = 'ℹ️ STACKSETUP only applies to the Full Stack Bundle.';
+            document.getElementById('discountMsg').textContent = 'ℹ️ STACKSETUP only applies to the Automation+Website or Full Stack bundles.';
             document.getElementById('discountMsg').className = 'discount-msg error';
           }
         }
@@ -1314,21 +1314,21 @@
         return;
       }
 
-      // Plan restriction: NOSETUP not valid on bundle-full
+      // Plan restriction: NOSETUP not valid on bundle-aw or bundle-full
       if (code.type === 'waive_setup' && selectedPlan && code.excludePlans && code.excludePlans.includes(selectedPlan)) {
-        msg.textContent = '✕ NOSETUP cannot be applied to the Full Stack Bundle. Try STACKSETUP for 30% off that setup fee.';
+        msg.textContent = '✕ NOSETUP cannot be applied to bundle packages. Try STACKSETUP for 30% off the setup fee on Automation+Website or Full Stack bundles.';
         msg.className = 'discount-msg error';
         return;
       }
 
-      // Plan restriction: STACKSETUP only valid on bundle-full
+      // Plan restriction: STACKSETUP only valid on bundle-aw and bundle-full
       if (code.type === 'stack_setup30' && selectedPlan && code.onlyPlans && !code.onlyPlans.includes(selectedPlan)) {
-        msg.textContent = '✕ STACKSETUP only applies to the Full Stack Bundle.';
+        msg.textContent = '✕ STACKSETUP only applies to the Automation+Website or Full Stack bundles.';
         msg.className = 'discount-msg error';
         return;
       }
       if (code.type === 'stack_setup30' && !selectedPlan) {
-        msg.textContent = '✕ Please select the Full Stack Bundle plan first.';
+        msg.textContent = '✕ Please select the Automation+Website or Full Stack Bundle plan first.';
         msg.className = 'discount-msg error';
         return;
       }
