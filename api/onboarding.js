@@ -74,7 +74,7 @@ module.exports = async (req, res) => {
   try {
     const briefEmail = getBuildBriefEmail(clientData);
     await resend.emails.send({
-      from: 'Apex Automations System <contact@apexautomations.pro>',
+      from: 'Apex Automations System <contact@send.apexautomations.pro>',
       to: 'contact@apexautomations.pro',
       subject: briefEmail.subject,
       html: briefEmail.html,
@@ -87,7 +87,7 @@ module.exports = async (req, res) => {
   try {
     const confirmEmail = getClientConfirmationEmail(clientData);
     await resend.emails.send({
-      from: 'Roger Canales <contact@apexautomations.pro>',
+      from: 'Roger Canales <contact@send.apexautomations.pro>',
       to: businessEmail,
       subject: confirmEmail.subject,
       html: confirmEmail.html,

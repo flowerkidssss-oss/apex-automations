@@ -154,7 +154,7 @@ module.exports = async (req, res) => {
 
       // Onboarding email to customer
       await resend.emails.send({
-        from: 'Roger Canales <contact@apexautomations.pro>',
+        from: 'Roger Canales <contact@send.apexautomations.pro>',
         to: email,
         subject: emailTemplate.subject,
         html: emailTemplate.html,
@@ -162,7 +162,7 @@ module.exports = async (req, res) => {
 
       // Notification to Roger
       await resend.emails.send({
-        from: 'Apex Automations <contact@apexautomations.pro>',
+        from: 'Apex Automations <contact@send.apexautomations.pro>',
         to: 'contact@apexautomations.pro',
         subject: `New client: ${business} — ${selectedPlan.name}`,
         html: `
