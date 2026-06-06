@@ -17,7 +17,8 @@ const SIGNATURE = `
   </table>
 `;
 
-const ONBOARDING_LINK = 'https://apexautomations.pro/onboarding.html';
+const ONBOARDING_BASE = 'https://apexautomations.pro/onboarding.html';
+function onboardingLink(plan) { return plan ? `${ONBOARDING_BASE}?plan=${plan}` : ONBOARDING_BASE; }
 
 function wrapEmail(body) {
   return `<!DOCTYPE html>
@@ -99,7 +100,7 @@ function ctaButton(text, url) {
 // ─────────────────────────────────────────────
 // Template: automation
 // ─────────────────────────────────────────────
-function automationTemplate({ firstName }) {
+function automationTemplate({ firstName, plan }) {
   const body = `
     <p style="margin:0 0 8px;font-size:24px;font-weight:700;color:#111827;font-family:Arial,sans-serif;">Hey ${firstName}, welcome aboard! 🚀</p>
     <p style="margin:0 0 20px;font-size:15px;color:#6b7280;font-family:Arial,sans-serif;">Your payment is confirmed. Your Automation System is being built.</p>
@@ -118,7 +119,7 @@ function automationTemplate({ firstName }) {
       ])}
     </table>
 
-    ${ctaButton('Fill Out Your Onboarding Form →', ONBOARDING_LINK)}
+    ${ctaButton('Fill Out Your Onboarding Form →', onboardingLink(plan))}
 
     <div style="background-color:#f9fafb;border-left:4px solid #111827;border-radius:4px;padding:16px 20px;margin:20px 0;">
       <p style="margin:0;font-size:14px;color:#374151;font-family:Arial,sans-serif;font-weight:700;">⚡ Timeline: 5–7 business days from form submission to live.</p>
@@ -140,7 +141,7 @@ function automationTemplate({ firstName }) {
 
     <p style="margin:24px 0 0;font-size:14px;color:#6b7280;font-family:Arial,sans-serif;font-style:italic;">
       <strong>P.S.</strong> — The faster you fill out the onboarding form, the faster we build. Clients who submit within 24 hours go live first. 
-      <a href="${ONBOARDING_LINK}" style="color:#111827;font-weight:700;">Fill it out now →</a>
+      <a href="${onboardingLink(plan)}" style="color:#111827;font-weight:700;">Fill it out now →</a>
     </p>
   `;
   return wrapEmail(body);
@@ -149,7 +150,7 @@ function automationTemplate({ firstName }) {
 // ─────────────────────────────────────────────
 // Template: scheduling
 // ─────────────────────────────────────────────
-function schedulingTemplate({ firstName }) {
+function schedulingTemplate({ firstName, plan }) {
   const body = `
     <p style="margin:0 0 8px;font-size:24px;font-weight:700;color:#111827;font-family:Arial,sans-serif;">Hey ${firstName}, your booking system is incoming ⚡</p>
     <p style="margin:0 0 20px;font-size:15px;color:#6b7280;font-family:Arial,sans-serif;">Payment confirmed. Your Scheduling System build starts now.</p>
@@ -168,7 +169,7 @@ function schedulingTemplate({ firstName }) {
       ])}
     </table>
 
-    ${ctaButton('Fill Out Your Onboarding Form →', ONBOARDING_LINK)}
+    ${ctaButton('Fill Out Your Onboarding Form →', onboardingLink(plan))}
 
     <div style="background-color:#f9fafb;border-left:4px solid #111827;border-radius:4px;padding:16px 20px;margin:20px 0;">
       <p style="margin:0;font-size:14px;color:#374151;font-family:Arial,sans-serif;font-weight:700;">⚡ Timeline: 5–7 business days from form submission to live.</p>
@@ -190,7 +191,7 @@ function schedulingTemplate({ firstName }) {
 
     <p style="margin:24px 0 0;font-size:14px;color:#6b7280;font-family:Arial,sans-serif;font-style:italic;">
       <strong>P.S.</strong> — Fill out the onboarding form ASAP and we'll start building immediately. 
-      <a href="${ONBOARDING_LINK}" style="color:#111827;font-weight:700;">Get started →</a>
+      <a href="${onboardingLink(plan)}" style="color:#111827;font-weight:700;">Get started →</a>
     </p>
   `;
   return wrapEmail(body);
@@ -199,7 +200,7 @@ function schedulingTemplate({ firstName }) {
 // ─────────────────────────────────────────────
 // Template: website
 // ─────────────────────────────────────────────
-function websiteTemplate({ firstName }) {
+function websiteTemplate({ firstName, plan }) {
   const body = `
     <p style="margin:0 0 8px;font-size:24px;font-weight:700;color:#111827;font-family:Arial,sans-serif;">Hey ${firstName}, your new website is in production 🌐</p>
     <p style="margin:0 0 20px;font-size:15px;color:#6b7280;font-family:Arial,sans-serif;">Payment confirmed. Your Website Build has officially started.</p>
@@ -218,7 +219,7 @@ function websiteTemplate({ firstName }) {
       ])}
     </table>
 
-    ${ctaButton('Fill Out Your Onboarding Form →', ONBOARDING_LINK)}
+    ${ctaButton('Fill Out Your Onboarding Form →', onboardingLink(plan))}
 
     <div style="background-color:#f9fafb;border-left:4px solid #111827;border-radius:4px;padding:16px 20px;margin:20px 0;">
       <p style="margin:0;font-size:14px;color:#374151;font-family:Arial,sans-serif;font-weight:700;">🌐 Timeline: 10–14 business days from form submission to launch.</p>
@@ -241,7 +242,7 @@ function websiteTemplate({ firstName }) {
 
     <p style="margin:24px 0 0;font-size:14px;color:#6b7280;font-family:Arial,sans-serif;font-style:italic;">
       <strong>P.S.</strong> — The sooner you send us your brand assets and onboarding form, the sooner we can get into design. Don't let this sit! 
-      <a href="${ONBOARDING_LINK}" style="color:#111827;font-weight:700;">Submit your form →</a>
+      <a href="${onboardingLink(plan)}" style="color:#111827;font-weight:700;">Submit your form →</a>
     </p>
   `;
   return wrapEmail(body);
@@ -250,7 +251,7 @@ function websiteTemplate({ firstName }) {
 // ─────────────────────────────────────────────
 // Template: bundle-as (Automation + Scheduling)
 // ─────────────────────────────────────────────
-function bundleAsTemplate({ firstName }) {
+function bundleAsTemplate({ firstName, plan }) {
   const body = `
     <p style="margin:0 0 8px;font-size:24px;font-weight:700;color:#111827;font-family:Arial,sans-serif;">Hey ${firstName}, your full lead & booking system is incoming 🔧</p>
     <p style="margin:0 0 20px;font-size:15px;color:#6b7280;font-family:Arial,sans-serif;">Payment confirmed. Your Automation + Scheduling Bundle build starts now.</p>
@@ -269,7 +270,7 @@ function bundleAsTemplate({ firstName }) {
       ])}
     </table>
 
-    ${ctaButton('Fill Out Your Onboarding Form →', ONBOARDING_LINK)}
+    ${ctaButton('Fill Out Your Onboarding Form →', onboardingLink(plan))}
 
     <div style="background-color:#f9fafb;border-left:4px solid #111827;border-radius:4px;padding:16px 20px;margin:20px 0;">
       <p style="margin:0;font-size:14px;color:#374151;font-family:Arial,sans-serif;font-weight:700;">⚡ Timeline: 5–7 business days from form submission to live.</p>
@@ -294,7 +295,7 @@ function bundleAsTemplate({ firstName }) {
 
     <p style="margin:24px 0 0;font-size:14px;color:#6b7280;font-family:Arial,sans-serif;font-style:italic;">
       <strong>P.S.</strong> — Fill out the onboarding form and we'll get both systems moving at the same time. No delays. 
-      <a href="${ONBOARDING_LINK}" style="color:#111827;font-weight:700;">Fill it out now →</a>
+      <a href="${onboardingLink(plan)}" style="color:#111827;font-weight:700;">Fill it out now →</a>
     </p>
   `;
   return wrapEmail(body);
@@ -303,7 +304,7 @@ function bundleAsTemplate({ firstName }) {
 // ─────────────────────────────────────────────
 // Template: bundle-aw (Automation + Website)
 // ─────────────────────────────────────────────
-function bundleAwTemplate({ firstName }) {
+function bundleAwTemplate({ firstName, plan }) {
   const body = `
     <p style="margin:0 0 8px;font-size:24px;font-weight:700;color:#111827;font-family:Arial,sans-serif;">Hey ${firstName}, your full digital presence starts now 🌐⚡</p>
     <p style="margin:0 0 20px;font-size:15px;color:#6b7280;font-family:Arial,sans-serif;">Payment confirmed. Your Automation + Website Bundle is in production.</p>
@@ -322,7 +323,7 @@ function bundleAwTemplate({ firstName }) {
       ])}
     </table>
 
-    ${ctaButton('Fill Out Your Onboarding Form →', ONBOARDING_LINK)}
+    ${ctaButton('Fill Out Your Onboarding Form →', onboardingLink(plan))}
 
     <div style="background-color:#f9fafb;border-left:4px solid #111827;border-radius:4px;padding:16px 20px;margin:20px 0;">
       <p style="margin:0;font-size:14px;color:#374151;font-family:Arial,sans-serif;font-weight:700;">🌐 Timeline: 10–14 business days (website sets the pace, automation builds in parallel).</p>
@@ -348,7 +349,7 @@ function bundleAwTemplate({ firstName }) {
 
     <p style="margin:24px 0 0;font-size:14px;color:#6b7280;font-family:Arial,sans-serif;font-style:italic;">
       <strong>P.S.</strong> — Your brand assets are the thing that'll speed this up the most. Get those in the onboarding form and we'll start designing immediately. 
-      <a href="${ONBOARDING_LINK}" style="color:#111827;font-weight:700;">Submit your form →</a>
+      <a href="${onboardingLink(plan)}" style="color:#111827;font-weight:700;">Submit your form →</a>
     </p>
   `;
   return wrapEmail(body);
@@ -357,7 +358,7 @@ function bundleAwTemplate({ firstName }) {
 // ─────────────────────────────────────────────
 // Template: bundle-full (Full Stack)
 // ─────────────────────────────────────────────
-function bundleFullTemplate({ firstName }) {
+function bundleFullTemplate({ firstName, plan }) {
   const body = `
     <p style="margin:0 0 8px;font-size:24px;font-weight:700;color:#111827;font-family:Arial,sans-serif;">Hey ${firstName}, Full Stack activated 🚀🔧🌐</p>
     <p style="margin:0 0 20px;font-size:15px;color:#6b7280;font-family:Arial,sans-serif;">Payment confirmed. Your entire business engine is being built.</p>
@@ -376,7 +377,7 @@ function bundleFullTemplate({ firstName }) {
       ])}
     </table>
 
-    ${ctaButton('Fill Out Your Onboarding Form →', ONBOARDING_LINK)}
+    ${ctaButton('Fill Out Your Onboarding Form →', onboardingLink(plan))}
 
     <div style="background-color:#111827;border-radius:8px;padding:20px 24px;margin:20px 0;">
       <p style="margin:0 0 4px;font-size:14px;font-weight:700;color:#ffffff;font-family:Arial,sans-serif;">🏆 Timeline: 10–14 business days to full launch.</p>
@@ -409,7 +410,7 @@ function bundleFullTemplate({ firstName }) {
 
     <p style="margin:24px 0 0;font-size:14px;color:#6b7280;font-family:Arial,sans-serif;font-style:italic;">
       <strong>P.S.</strong> — The onboarding form is the only thing standing between you and launch. Fill it out now and we'll start building all three systems today. 
-      <a href="${ONBOARDING_LINK}" style="color:#111827;font-weight:700;">Let's go →</a>
+      <a href="${onboardingLink(plan)}" style="color:#111827;font-weight:700;">Let's go →</a>
     </p>
   `;
   return wrapEmail(body);
@@ -424,27 +425,27 @@ function getOnboardingEmail(plan, customerData) {
   const templates = {
     'automation':  {
       subject: "You're in — let's get your leads on autopilot 🚀",
-      html: automationTemplate({ firstName }),
+      html: automationTemplate({ firstName, plan }),
     },
     'scheduling': {
       subject: "Booking system incoming — let's get you set up ⚡",
-      html: schedulingTemplate({ firstName }),
+      html: schedulingTemplate({ firstName, plan }),
     },
     'website': {
       subject: "Your new website is in production — here's what's next 🌐",
-      html: websiteTemplate({ firstName }),
+      html: websiteTemplate({ firstName, plan }),
     },
     'bundle-as': {
       subject: "Full lead & booking system incoming — let's build 🔧",
-      html: bundleAsTemplate({ firstName }),
+      html: bundleAsTemplate({ firstName, plan }),
     },
     'bundle-aw': {
       subject: "Website + automation — your full digital presence starts now 🌐⚡",
-      html: bundleAwTemplate({ firstName }),
+      html: bundleAwTemplate({ firstName, plan }),
     },
     'bundle-full': {
       subject: "Full Stack activated — let's build your entire business engine 🚀🔧🌐",
-      html: bundleFullTemplate({ firstName }),
+      html: bundleFullTemplate({ firstName, plan }),
     },
   };
 
