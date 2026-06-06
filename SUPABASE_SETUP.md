@@ -55,3 +55,20 @@ Vercel dashboard → your project → Settings → Environment Variables → Add
 After adding env vars, go to Deployments → Redeploy latest.
 
 Done. Every onboarding form submission will now save to this table automatically.
+
+---
+
+## New columns (add these to onboarding_submissions table)
+| Column | Type |
+|---|---|
+| socials | text |
+| calendar_link | text |
+| logo_file_url | text |
+| photo_file_urls | text |
+| build_brief_url | text |
+
+## Storage bucket setup
+1. Supabase dashboard → Storage → New bucket
+2. Name: client-assets
+3. Public: YES (so file URLs work directly)
+4. Click Create
