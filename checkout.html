@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Checkout — Apex Automations</title>
+  <meta name="description" content="Get started with Apex Automations. No setup fees, no contracts." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
@@ -35,7 +36,6 @@
       min-height: 100vh;
     }
 
-    /* ─── NAV ─── */
     nav {
       position: fixed;
       top: 0; left: 0; right: 0;
@@ -70,7 +70,6 @@
     }
     .nav-back:hover { color: var(--gold); }
 
-    /* ─── LAYOUT ─── */
     .checkout-wrapper {
       max-width: 1060px;
       margin: 0 auto;
@@ -81,7 +80,6 @@
       align-items: start;
     }
 
-    /* ─── ORDER SUMMARY ─── */
     .order-summary {
       position: sticky;
       top: 84px;
@@ -199,7 +197,6 @@
 
     .summary-guarantee .icon { font-size: 1.4rem; flex-shrink: 0; }
 
-    /* ─── CHECKOUT FORM ─── */
     .checkout-form-wrap {
       display: flex;
       flex-direction: column;
@@ -224,7 +221,6 @@
       border-bottom: 1px solid var(--border);
     }
 
-    /* ─── BILLING TOGGLE in checkout ─── */
     .billing-toggle-row {
       display: flex;
       align-items: center;
@@ -273,7 +269,6 @@
       border-radius: 100px;
     }
 
-    /* ─── PLAN SELECTOR ─── */
     .plan-selector {
       display: flex;
       flex-direction: column;
@@ -314,9 +309,6 @@
       font-size: 0.9rem;
       font-weight: 700;
       margin-bottom: 0.1rem;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
     }
 
     .plan-option-desc {
@@ -354,16 +346,6 @@
       border-radius: 100px;
     }
 
-    .plan-section-divider {
-      font-size: 0.68rem;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: #444;
-      padding: 0.5rem 0 0.25rem;
-    }
-
-    /* ─── FORM INPUTS ─── */
     .form-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -377,7 +359,6 @@
     }
 
     .form-group:last-child { margin-bottom: 0; }
-    .form-group.full { grid-column: 1 / -1; }
 
     .form-group label {
       font-size: 0.78rem;
@@ -388,8 +369,7 @@
       margin-bottom: 0.45rem;
     }
 
-    .form-group input,
-    .form-group select {
+    .form-group input {
       background: #0a0a0a;
       border: 1px solid var(--border);
       border-radius: 8px;
@@ -399,20 +379,16 @@
       font-size: 0.95rem;
       transition: border-color var(--transition), box-shadow var(--transition);
       outline: none;
-      appearance: none;
       width: 100%;
     }
 
-    .form-group input:focus,
-    .form-group select:focus {
+    .form-group input:focus {
       border-color: var(--gold);
       box-shadow: 0 0 0 3px rgba(232,197,71,0.12);
     }
 
     .form-group input::placeholder { color: #444; }
-    .form-group select option { background: #111; }
 
-    /* ─── STRIPE ELEMENTS ─── */
     .stripe-element-wrap {
       background: #0a0a0a;
       border: 1px solid var(--border);
@@ -433,7 +409,6 @@
       margin-top: 1rem;
     }
 
-    /* ─── SUBMIT ─── */
     .submit-section {
       display: flex;
       flex-direction: column;
@@ -501,7 +476,6 @@
       gap: 0.3rem;
     }
 
-    /* ─── DISCOUNT ─── */
     .discount-wrap {
       display: flex;
       gap: 0.75rem;
@@ -584,7 +558,6 @@
 
     .discount-remove:hover { color: #f87171; }
 
-    /* ─── ERROR / SUCCESS ─── */
     .form-error {
       background: rgba(220,38,38,0.08);
       border: 1px solid rgba(220,38,38,0.3);
@@ -597,7 +570,6 @@
 
     .form-error.visible { display: block; }
 
-    /* ─── SUCCESS STATE ─── */
     .success-screen {
       display: none;
       text-align: center;
@@ -639,7 +611,6 @@
       text-decoration: none;
     }
 
-    /* ─── FOOTER ─── */
     footer {
       text-align: center;
       padding: 2rem;
@@ -651,37 +622,27 @@
 
     footer strong { color: var(--gold); }
 
-    /* ─── RESPONSIVE ─── */
     @media (max-width: 768px) {
       .checkout-wrapper {
         grid-template-columns: 1fr;
         padding-top: 84px;
       }
-
       .order-summary {
         position: static;
         order: -1;
       }
-
-      .form-row {
-        grid-template-columns: 1fr;
-      }
-
-      .stripe-row {
-        grid-template-columns: 1fr;
-      }
+      .form-row { grid-template-columns: 1fr; }
+      .stripe-row { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
 
-  <!-- NAV -->
   <nav>
     <a href="index.html" class="nav-logo">Apex<span>.</span></a>
     <a href="index.html" class="nav-back">← Back to site</a>
   </nav>
 
-  <!-- SUCCESS SCREEN (hidden by default) -->
   <div class="success-screen" id="successScreen">
     <span class="success-icon">🎉</span>
     <h2>You're in. Welcome to <span>Apex.</span></h2>
@@ -689,7 +650,6 @@
     <a href="index.html" class="btn-back">Back to Home</a>
   </div>
 
-  <!-- CHECKOUT LAYOUT -->
   <div class="checkout-wrapper" id="checkoutLayout">
 
     <!-- LEFT: ORDER SUMMARY -->
@@ -702,13 +662,9 @@
           <div class="plan-desc" id="summaryPlanDesc">Choose a plan below to see your order details.</div>
         </div>
         <div class="summary-pricing">
-          <div class="price-row">
-            <span>One-time setup fee</span>
-            <span class="amount" id="summarySetup">—</span>
-          </div>
-          <div class="price-row" id="summaryRecurringRow">
-            <span id="summaryRecurringLabel">First month</span>
-            <span class="amount" id="summaryRecurring">—</span>
+          <div class="price-row" id="summaryMonthlyRow">
+            <span id="summaryMonthlyLabel">Monthly</span>
+            <span class="amount" id="summaryMonthly">—</span>
           </div>
           <div class="price-row" id="discountRow" style="display:none;color:#4ade80;">
             <span id="discountRowLabel">Discount</span>
@@ -726,7 +682,7 @@
         </div>
         <div class="summary-guarantee">
           <span class="icon">🔒</span>
-          <span>Secured by Stripe. No contracts. Cancel anytime.</span>
+          <span>Secured by Stripe. No setup fees. No contracts. Cancel anytime.</span>
         </div>
       </div>
     </div>
@@ -738,93 +694,51 @@
       <div class="form-section">
         <div class="form-section-title">Select Your Plan</div>
 
-        <!-- Billing toggle -->
         <div class="billing-toggle-row">
           <span class="billing-lbl active" id="co-lbl-monthly">Monthly</span>
           <div class="co-toggle" id="coBillingToggle" onclick="coToggleBilling()">
             <div class="co-toggle-knob"></div>
           </div>
           <span class="billing-lbl" id="co-lbl-yearly">Yearly</span>
-          <span class="yearly-save-tag">Save 25%</span>
+          <span class="yearly-save-tag">Save 20%</span>
         </div>
 
         <div class="plan-selector" id="planSelector">
-          <!-- Individual Services -->
-          <div class="plan-section-divider">Individual Services</div>
 
-          <label class="plan-option" id="opt-automation">
-            <input type="radio" name="plan" value="automation" />
+          <label class="plan-option" id="opt-starter">
+            <input type="radio" name="plan" value="starter" />
             <div class="plan-option-info">
-              <div class="plan-option-name">⚡ Automation System</div>
+              <div class="plan-option-name">⚡ Starter</div>
               <div class="plan-option-desc">Missed call text-back, AI follow-up, reviews</div>
             </div>
             <div class="plan-option-price">
-              <span class="pop" id="price-automation">$297<span style="font-size:0.7rem;font-weight:500;">/mo</span></span>
-              <span class="pop-mo">+ $299 setup</span>
+              <span class="pop" id="price-starter">$397<span style="font-size:0.7rem;font-weight:500;">/mo</span></span>
+              <span class="pop-mo">no setup fee</span>
             </div>
           </label>
 
-          <label class="plan-option" id="opt-scheduling">
-            <input type="radio" name="plan" value="scheduling" />
-            <div class="plan-option-info">
-              <div class="plan-option-name">📅 Scheduling System</div>
-              <div class="plan-option-desc">Online booking, calendar sync, reminders</div>
-            </div>
-            <div class="plan-option-price">
-              <span class="pop" id="price-scheduling">$197<span style="font-size:0.7rem;font-weight:500;">/mo</span></span>
-              <span class="pop-mo">+ $499 setup</span>
-            </div>
-          </label>
-
-          <label class="plan-option" id="opt-website">
-            <input type="radio" name="plan" value="website" />
-            <div class="plan-option-info">
-              <div class="plan-option-name">🌐 Website Build</div>
-              <div class="plan-option-desc">Custom site, live in 10–14 days, SEO ready</div>
-            </div>
-            <div class="plan-option-price">
-              <span class="pop">$1,200</span>
-              <span class="pop-mo">one-time</span>
-            </div>
-          </label>
-
-          <!-- Bundles -->
-          <div class="plan-section-divider" style="margin-top:0.5rem;">Bundles — Best Value</div>
-
-          <label class="plan-option" id="opt-bundle-as">
-            <input type="radio" name="plan" value="bundle-as" />
-            <div class="plan-option-info">
-              <div class="plan-option-name">📦 Automation + Scheduling</div>
-              <div class="plan-option-desc">Save $99 setup + $47/mo vs separate</div>
-            </div>
-            <div class="plan-option-price">
-              <span class="pop" id="price-bundle-as">$447<span style="font-size:0.7rem;font-weight:500;">/mo</span></span>
-              <span class="pop-mo">+ $699 setup</span>
-            </div>
-          </label>
-
-          <label class="plan-option" id="opt-bundle-aw">
-            <input type="radio" name="plan" value="bundle-aw" />
-            <div class="plan-option-info">
-              <div class="plan-option-name">🚀 Automation + Website</div>
-              <div class="plan-option-desc">Save $99 on setup, site included</div>
-            </div>
-            <div class="plan-option-price">
-              <span class="pop" id="price-bundle-aw">$297<span style="font-size:0.7rem;font-weight:500;">/mo</span></span>
-              <span class="pop-mo">+ $1,399 setup</span>
-            </div>
-          </label>
-
-          <label class="plan-option" id="opt-bundle-full">
+          <label class="plan-option" id="opt-growth">
             <div class="plan-popular">Most Popular</div>
-            <input type="radio" name="plan" value="bundle-full" />
+            <input type="radio" name="plan" value="growth" />
             <div class="plan-option-info">
-              <div class="plan-option-name">⭐ Full Stack Bundle</div>
-              <div class="plan-option-desc">Automation + Scheduling + Website — save $199</div>
+              <div class="plan-option-name">🚀 Growth</div>
+              <div class="plan-option-desc">Starter + online booking, scheduling, reminders</div>
             </div>
             <div class="plan-option-price">
-              <span class="pop" id="price-bundle-full">$447<span style="font-size:0.7rem;font-weight:500;">/mo</span></span>
-              <span class="pop-mo">+ $1,799 setup</span>
+              <span class="pop" id="price-growth">$597<span style="font-size:0.7rem;font-weight:500;">/mo</span></span>
+              <span class="pop-mo">no setup fee</span>
+            </div>
+          </label>
+
+          <label class="plan-option" id="opt-pro">
+            <input type="radio" name="plan" value="pro" />
+            <div class="plan-option-info">
+              <div class="plan-option-name">⭐ Pro</div>
+              <div class="plan-option-desc">Growth + custom website build included</div>
+            </div>
+            <div class="plan-option-price">
+              <span class="pop" id="price-pro">$997<span style="font-size:0.7rem;font-weight:500;">/mo</span></span>
+              <span class="pop-mo">no setup fee</span>
             </div>
           </label>
 
@@ -899,10 +813,8 @@
         </div>
       </div>
 
-      <!-- ERROR -->
       <div class="form-error" id="formError"></div>
 
-      <!-- SUBMIT -->
       <div class="submit-section">
         <button class="btn-pay" id="submitBtn">
           <div class="spinner"></div>
@@ -923,7 +835,6 @@
   </footer>
 
   <script>
-    // ─── STRIPE INIT ───
     const stripe = Stripe('pk_live_51TedXRCIOitWW40KZMGFqc5rIudr7dyYdkH9h7ZUuuWraSnHkNcUvrvtBxX6iMw4DNu0RDIifR67kmpLgz4pHeTx00eNOs5PDR');
     const elements = stripe.elements({
       appearance: {
@@ -957,18 +868,14 @@
       el.on('blur',  () => wrapEl.classList.remove('focused'));
     });
 
-    // ─── PLAN DEFINITIONS ───
-    // Each plan: setup (flat), monthly (recurring), yearlyMonthly (recurring at 25% off)
-    // For website: monthly = 0 (one-time), use totalToday override
+    // ─── PLAN DEFINITIONS (no setup fees) ───
     const PLANS = {
-      'automation': {
-        name: 'Automation System',
+      'starter': {
+        name: 'Starter',
         badge: 'AI Automation',
-        desc: 'Full done-for-you AI follow-up, missed call text-back, and review automation.',
-        setup: 299,
-        monthly: 297,
-        yearlyMonthly: 223,
-        isOneTime: false,
+        desc: 'Missed call text-back, AI follow-up sequences, and automated reviews — running 24/7.',
+        monthly: 397,
+        yearlyMonthly: 318,
         features: [
           'Missed Call Text-Back (24/7)',
           'AI follow-up sequences (SMS + email)',
@@ -979,216 +886,102 @@
           'Live within 5–7 business days',
         ]
       },
-      'scheduling': {
-        name: 'Scheduling System',
-        badge: 'Scheduling',
-        desc: 'Done-for-you online booking, calendar sync, and automated reminders.',
-        setup: 499,
-        monthly: 197,
-        yearlyMonthly: 148,
-        isOneTime: false,
+      'growth': {
+        name: 'Growth',
+        badge: 'Most Popular',
+        desc: 'Everything in Starter plus done-for-you online booking and scheduling automation.',
+        monthly: 597,
+        yearlyMonthly: 478,
         features: [
+          'Everything in Starter',
           'Done-for-you online booking page',
           'Calendar sync (Google/Outlook)',
           'Automated appointment reminders',
           'No-show reduction system',
-          'Staff scheduling tools',
           'Client self-service portal',
           'Live within 5–7 business days',
         ]
       },
-      'website': {
-        name: 'Website Build',
-        badge: 'Website',
-        desc: 'Custom, mobile-responsive, SEO-optimized website — live in 10–14 days.',
-        setup: 1200,
-        monthly: 0,
-        yearlyMonthly: 0,
-        isOneTime: true,
+      'pro': {
+        name: 'Pro',
+        badge: 'Full Stack',
+        desc: 'Everything in Growth plus a custom website build — the full system under one monthly fee.',
+        monthly: 997,
+        yearlyMonthly: 798,
         features: [
-          'Custom designed website',
-          'Mobile responsive',
-          'SEO optimized',
-          'Contact forms & Google Analytics',
-          'Live in 10–14 days',
-          '30-day post-launch support',
-          'Hosting setup included',
-        ]
-      },
-      'bundle-as': {
-        name: 'Automation + Scheduling Bundle',
-        badge: 'Bundle',
-        desc: 'Capture leads and book them automatically — two systems working together.',
-        setup: 699,
-        monthly: 347,
-        yearlyMonthly: 260,
-        isOneTime: false,
-        features: [
-          'Everything in Automation System',
-          'Everything in Scheduling System',
-          'Unified lead + booking dashboard',
-          'Priority support',
-          'Save $99 on setup vs separate',
-          'Save $100/mo vs separate',
-          'Live within 5–7 business days',
-        ]
-      },
-      'bundle-aw': {
-        name: 'Automation + Website Bundle',
-        badge: 'Bundle',
-        desc: 'Get found online and never miss a lead — automation and a new site.',
-        setup: 1399,
-        monthly: 297,
-        yearlyMonthly: 223,
-        isOneTime: false,
-        features: [
-          'Full custom website build',
-          'AI Automation System',
+          'Everything in Growth',
+          'Custom website build (included)',
+          'Mobile responsive & SEO optimized',
           'Seamless form-to-automation integration',
-          'Priority support',
-          'Save $99 on setup vs separate',
-          '+ $97/mo website maintenance (optional)',
-          'Live in 10–14 days',
-        ]
-      },
-      'bundle-full': {
-        name: 'Full Stack Bundle',
-        badge: '⭐ Most Popular',
-        desc: 'Everything — website, automation, and scheduling — at our best price.',
-        setup: 1799,
-        monthly: 447,
-        yearlyMonthly: 335,
-        isOneTime: false,
-        features: [
-          'Full custom website build',
-          'AI Automation System',
-          'Scheduling System',
           'Unified dashboard & reporting',
           'Priority onboarding & support',
-          'Save $199 on setup vs separate',
-          'Best overall value',
+          'Live in 10–14 days',
         ]
       }
     };
 
-    // Billing state
+    const CODES = {
+      'HALFOFF':  { type: 'half_first', label: '✓ 50% off first month!' },
+      'YEARLY10': { type: 'yearly10',   label: '✓ Extra 10% off yearly billing!' },
+    };
+
     let isYearly = false;
     let selectedPlan = null;
     let appliedCode = null;
 
-    // ─── DISCOUNT CODES ───
-    // NOSETUP: waive setup fee (any plan except bundle-full)
-    // HALFOFF: 50% off first month (monthly billing only)
-    // YEARLY10: extra 10% off when yearly billing selected
-    // STACKSETUP: 30% off bundle-full setup fee only
-    const CODES = {
-      'NOSETUP':    { type: 'waive_setup',    label: '✓ Setup fee waived!', excludePlans: ['bundle-aw', 'bundle-full'] },
-      'HALFOFF':    { type: 'half_first',     label: '✓ 50% off first month!' },
-      'YEARLY10':   { type: 'yearly10',       label: '✓ Extra 10% off yearly billing!' },
-      'STACKSETUP': { type: 'stack_setup30',  label: '✓ 30% off setup fee!', onlyPlans: ['bundle-aw', 'bundle-full'] },
-    };
-
-    // ─── BILLING TOGGLE ───
     function coToggleBilling() {
       isYearly = !isYearly;
-      const toggle = document.getElementById('coBillingToggle');
-      const lblMonthly = document.getElementById('co-lbl-monthly');
-      const lblYearly = document.getElementById('co-lbl-yearly');
-
-      toggle.classList.toggle('yearly', isYearly);
-      lblMonthly.classList.toggle('active', !isYearly);
-      lblYearly.classList.toggle('active', isYearly);
-
-      // Update plan option prices displayed in selector
+      document.getElementById('coBillingToggle').classList.toggle('yearly', isYearly);
+      document.getElementById('co-lbl-monthly').classList.toggle('active', !isYearly);
+      document.getElementById('co-lbl-yearly').classList.toggle('active', isYearly);
       updatePlanOptionPrices();
-
-      // If a plan is selected, update summary
       if (selectedPlan) updateSummary();
-
-      // Re-validate discount applicability
       if (appliedCode) {
         if (appliedCode.type === 'half_first' && isYearly) {
           removeDiscount();
-          document.getElementById('discountMsg').textContent = 'ℹ️ HALFOFF applies to monthly billing only. Removed.';
+          document.getElementById('discountMsg').textContent = 'ℹ️ HALFOFF applies to monthly billing only.';
           document.getElementById('discountMsg').className = 'discount-msg error';
         }
         if (appliedCode.type === 'yearly10' && !isYearly) {
           removeDiscount();
-          document.getElementById('discountMsg').textContent = 'ℹ️ YEARLY10 applies to yearly billing only. Removed.';
+          document.getElementById('discountMsg').textContent = 'ℹ️ YEARLY10 applies to yearly billing only.';
           document.getElementById('discountMsg').className = 'discount-msg error';
         }
       }
     }
 
     function updatePlanOptionPrices() {
-      const monthlyPlanIds = ['automation', 'scheduling', 'bundle-as', 'bundle-aw', 'bundle-full'];
-      monthlyPlanIds.forEach(id => {
+      ['starter', 'growth', 'pro'].forEach(id => {
         const el = document.getElementById('price-' + id);
         if (!el) return;
-        const plan = PLANS[id];
-        const mo = isYearly ? plan.yearlyMonthly : plan.monthly;
+        const mo = isYearly ? PLANS[id].yearlyMonthly : PLANS[id].monthly;
         el.innerHTML = '$' + mo + '<span style="font-size:0.7rem;font-weight:500;">/mo</span>';
       });
     }
 
-    // ─── CALCULATE TOTAL ───
     function calcTotal(planId, yearly, code) {
       const plan = PLANS[planId];
-      if (!plan) return { setup: 0, recurring: 0, discount: 0, total: 0, recurringLabel: '' };
-
-      let setup = plan.setup;
-      let recurringMo = yearly ? plan.yearlyMonthly : plan.monthly;
+      if (!plan) return { monthly: 0, discount: 0, total: 0 };
+      let mo = yearly ? plan.yearlyMonthly : plan.monthly;
       let discount = 0;
-      let recurringLabel = yearly ? 'First year (billed upfront)' : 'First month';
 
-      // Apply extra YEARLY10 on top of the already-discounted yearly price
+      if (code && code.type === 'half_first' && !yearly) {
+        discount = Math.round(mo * 0.5);
+      }
       if (code && code.type === 'yearly10' && yearly) {
-        // 10% off the full-year amount
-        const annualAmount = recurringMo * 12;
-        discount = Math.round(annualAmount * 0.10);
-      }
-
-      if (code && code.type === 'waive_setup') {
-        discount = setup;
-        setup = 0;
-      }
-
-      if (code && code.type === 'stack_setup30') {
-        discount = Math.round(plan.setup * 0.30);
-        setup = plan.setup - discount;
-      }
-
-      if (code && code.type === 'half_first' && !yearly && !plan.isOneTime) {
-        discount = Math.round(recurringMo * 0.5);
+        discount = Math.round(mo * 12 * 0.10);
       }
 
       let total;
-      if (plan.isOneTime) {
-        total = setup; // website: one-time only
-        recurringLabel = '';
-      } else if (yearly) {
-        const annualAmount = recurringMo * 12;
-        const yearlyDiscount = (code && code.type === 'yearly10') ? discount : 0;
-        total = setup + annualAmount - yearlyDiscount;
-        if (code && code.type === 'waive_setup') total = annualAmount;
-        if (code && code.type === 'stack_setup30') total = setup + annualAmount;
-        recurringLabel = 'Full year upfront (' + recurringMo + '/mo × 12)';
+      if (yearly) {
+        total = mo * 12 - (code && code.type === 'yearly10' ? discount : 0);
       } else {
-        if (code && code.type === 'waive_setup') {
-          total = recurringMo; // setup already zeroed
-        } else if (code && code.type === 'half_first') {
-          total = setup + recurringMo - discount;
-        } else if (code && code.type === 'stack_setup30') {
-          total = setup + recurringMo; // setup already reduced
-        } else {
-          total = setup + recurringMo;
-        }
+        total = mo - discount;
       }
 
-      return { setup, recurringMo, discount, total, recurringLabel, isOneTime: plan.isOneTime, yearly };
+      return { mo, discount, total, yearly };
     }
 
-    // ─── UPDATE SUMMARY ───
     function updateSummary() {
       if (!selectedPlan) return;
       const plan = PLANS[selectedPlan];
@@ -1197,23 +990,15 @@
       document.getElementById('summaryBadge').textContent = plan.badge;
       document.getElementById('summaryPlanName').textContent = plan.name;
       document.getElementById('summaryPlanDesc').textContent = plan.desc;
-      document.getElementById('summarySetup').textContent = '$' + calc.setup.toLocaleString();
 
-      const recurringRow = document.getElementById('summaryRecurringRow');
-      if (calc.isOneTime) {
-        recurringRow.style.display = 'none';
+      if (isYearly) {
+        document.getElementById('summaryMonthlyLabel').textContent = 'Yearly (billed upfront)';
+        document.getElementById('summaryMonthly').textContent = '$' + (calc.mo * 12).toLocaleString() + ' ($' + calc.mo + '/mo)';
       } else {
-        recurringRow.style.display = 'flex';
-        document.getElementById('summaryRecurringLabel').textContent = calc.recurringLabel;
-        if (isYearly) {
-          const annualAmount = calc.recurringMo * 12;
-          document.getElementById('summaryRecurring').textContent = '$' + annualAmount.toLocaleString() + ' ($' + calc.recurringMo + '/mo)';
-        } else {
-          document.getElementById('summaryRecurring').textContent = '$' + calc.recurringMo;
-        }
+        document.getElementById('summaryMonthlyLabel').textContent = 'First month';
+        document.getElementById('summaryMonthly').textContent = '$' + calc.mo;
       }
 
-      // Discount row
       if (appliedCode && calc.discount > 0) {
         document.getElementById('discountRow').style.display = 'flex';
         document.getElementById('discountRowLabel').textContent = appliedCode.label.replace('✓ ', '');
@@ -1224,11 +1009,7 @@
 
       document.getElementById('summaryTotal').textContent = '$' + calc.total.toLocaleString();
 
-      // Features
-      const featureList = document.getElementById('summaryFeatures');
-      featureList.innerHTML = plan.features.map(f => `<li>${f}</li>`).join('');
-
-      // Button text
+      document.getElementById('summaryFeatures').innerHTML = plan.features.map(f => `<li>${f}</li>`).join('');
       updateBtnText(calc.total);
     }
 
@@ -1237,49 +1018,25 @@
         document.getElementById('btnText').textContent = 'Select a plan to continue';
         return;
       }
-      const plan = PLANS[selectedPlan];
-      let label = isYearly ? 'Pay $' + total.toLocaleString() + ' — Start Today (Yearly)' : 'Pay $' + total.toLocaleString() + ' — Get Started';
-      if (plan.isOneTime) label = 'Pay $' + total.toLocaleString() + ' — Start My Website';
+      const label = isYearly
+        ? 'Pay $' + total.toLocaleString() + ' — Start Today (Yearly)'
+        : 'Pay $' + total.toLocaleString() + ' — Get Started';
       document.getElementById('btnText').textContent = label;
     }
 
-    // ─── PLAN SELECTION ───
     document.querySelectorAll('input[name="plan"]').forEach(radio => {
       radio.addEventListener('change', () => {
         selectedPlan = radio.value;
-
-        // Update selected style
         document.querySelectorAll('.plan-option').forEach(opt => opt.classList.remove('selected'));
         radio.closest('.plan-option').classList.add('selected');
-
-        // If discount code is applied, re-validate
         if (appliedCode) {
-          const plan = PLANS[selectedPlan];
-          if (appliedCode.type === 'half_first' && plan.isOneTime) {
-            removeDiscount();
-          }
-          if (appliedCode.type === 'yearly10' && !isYearly) {
-            removeDiscount();
-          }
-          // NOSETUP: remove if switching to bundle-aw or bundle-full
-          if (appliedCode.type === 'waive_setup' && appliedCode.excludePlans && appliedCode.excludePlans.includes(selectedPlan)) {
-            removeDiscount();
-            document.getElementById('discountMsg').textContent = 'ℹ️ NOSETUP cannot be used on bundle packages. Try STACKSETUP instead.';
-            document.getElementById('discountMsg').className = 'discount-msg error';
-          }
-          // STACKSETUP: remove if switching away from bundle-aw or bundle-full
-          if (appliedCode.type === 'stack_setup30' && appliedCode.onlyPlans && !appliedCode.onlyPlans.includes(selectedPlan)) {
-            removeDiscount();
-            document.getElementById('discountMsg').textContent = 'ℹ️ STACKSETUP only applies to the Automation+Website or Full Stack bundles.';
-            document.getElementById('discountMsg').className = 'discount-msg error';
-          }
+          if (appliedCode.type === 'yearly10' && !isYearly) removeDiscount();
+          if (appliedCode.type === 'half_first' && isYearly) removeDiscount();
         }
-
         updateSummary();
       });
     });
 
-    // ─── DISCOUNT CODE LOGIC ───
     document.getElementById('applyBtn').addEventListener('click', applyDiscount);
     document.getElementById('discountInput').addEventListener('keydown', e => { if (e.key === 'Enter') applyDiscount(); });
     document.getElementById('removeDiscount').addEventListener('click', removeDiscount);
@@ -1290,21 +1047,13 @@
       const code = CODES[raw];
 
       if (!raw) return;
-
       if (!code) {
         msg.textContent = '✕ Invalid code. Please try again.';
         msg.className = 'discount-msg error';
         return;
       }
-
-      // Validate context
       if (code.type === 'half_first' && isYearly) {
         msg.textContent = '✕ HALFOFF only applies to monthly billing.';
-        msg.className = 'discount-msg error';
-        return;
-      }
-      if (code.type === 'half_first' && selectedPlan && PLANS[selectedPlan].isOneTime) {
-        msg.textContent = '✕ HALFOFF doesn\'t apply to one-time purchases.';
         msg.className = 'discount-msg error';
         return;
       }
@@ -1314,34 +1063,13 @@
         return;
       }
 
-      // Plan restriction: NOSETUP not valid on bundle-aw or bundle-full
-      if (code.type === 'waive_setup' && selectedPlan && code.excludePlans && code.excludePlans.includes(selectedPlan)) {
-        msg.textContent = '✕ NOSETUP cannot be applied to bundle packages. Try STACKSETUP for 30% off the setup fee on Automation+Website or Full Stack bundles.';
-        msg.className = 'discount-msg error';
-        return;
-      }
-
-      // Plan restriction: STACKSETUP only valid on bundle-aw and bundle-full
-      if (code.type === 'stack_setup30' && selectedPlan && code.onlyPlans && !code.onlyPlans.includes(selectedPlan)) {
-        msg.textContent = '✕ STACKSETUP only applies to the Automation+Website or Full Stack bundles.';
-        msg.className = 'discount-msg error';
-        return;
-      }
-      if (code.type === 'stack_setup30' && !selectedPlan) {
-        msg.textContent = '✕ Please select the Automation+Website or Full Stack Bundle plan first.';
-        msg.className = 'discount-msg error';
-        return;
-      }
-
       appliedCode = { ...code, code: raw };
       msg.className = 'discount-msg';
-
       document.getElementById('discountAppliedText').textContent = code.label;
       document.getElementById('discountApplied').classList.add('visible');
       document.getElementById('discountInput').value = '';
       document.getElementById('discountInput').disabled = true;
       document.getElementById('applyBtn').disabled = true;
-
       if (selectedPlan) updateSummary();
     }
 
@@ -1354,7 +1082,6 @@
       if (selectedPlan) updateSummary();
     }
 
-    // ─── SUBMIT ───
     const submitBtn = document.getElementById('submitBtn');
     const formError = document.getElementById('formError');
 
@@ -1447,16 +1174,14 @@
       formError.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
 
-    function hideError() {
-      formError.classList.remove('visible');
-    }
+    function hideError() { formError.classList.remove('visible'); }
 
     function setLoading(loading) {
       submitBtn.disabled = loading;
       submitBtn.classList.toggle('loading', loading);
     }
 
-    // ─── URL PARAMS — Pre-select plan and billing from URL ───
+    // Pre-select from URL params
     const urlParams = new URLSearchParams(window.location.search);
     const urlPlan = urlParams.get('plan');
     const urlBilling = urlParams.get('billing');

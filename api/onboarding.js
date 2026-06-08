@@ -1,11 +1,10 @@
 const { createClient } = require('@supabase/supabase-js');
 const { Resend } = require('resend');
-const formidable = require('formidable');
-const fs = require('fs');
+const Busboy = require('busboy');
 const path = require('path');
 const { getBuildBriefEmail, getClientConfirmationEmail } = require('./emails');
 
-// Disable default body parser so formidable can handle multipart
+// Disable default body parser so busboy can handle multipart
 module.exports.config = { api: { bodyParser: false } };
 
 const resend = new Resend(process.env.RESEND_API_KEY);
@@ -54,28 +53,56 @@ function getActionItems(plan) {
   }
 }
 
-// ── Parse multipart form with formidable ──
+// ── Parse multipart form with busboy (Vercel-compatible) ──
 function parseForm(req) {
   return new Promise((resolve, reject) => {
-    const form = formidable({
-      maxFileSize: 10 * 1024 * 1024, // 10MB per file
-      multiples: true,
+    const fields = {};
+    const files = {};
+
+    let bb;
+    try {
+      bb = Busboy({
+        headers: req.headers,
+        limits: { fileSize: 10 * 1024 * 1024 }, // 10MB per file
+      });
+    } catch (err) {
+      return reject(err);
+    }
+
+    bb.on('field', (name, val) => {
+      fields[name] = val;
     });
-    form.parse(req, (err, fields, files) => {
-      if (err) return reject(err);
-      // formidable v3 returns arrays for all field values — unwrap singles
-      const unwrapped = {};
-      for (const [k, v] of Object.entries(fields)) {
-        unwrapped[k] = Array.isArray(v) ? v[0] : v;
-      }
-      resolve({ fields: unwrapped, files });
+
+    bb.on('file', (name, stream, info) => {
+      const { filename, mimeType } = info;
+      const chunks = [];
+      stream.on('data', (chunk) => chunks.push(chunk));
+      stream.on('end', () => {
+        const buf = Buffer.concat(chunks);
+        const fileObj = {
+          originalFilename: filename,
+          mimetype: mimeType,
+          _buffer: buf,
+        };
+        if (files[name]) {
+          if (!Array.isArray(files[name])) files[name] = [files[name]];
+          files[name].push(fileObj);
+        } else {
+          files[name] = fileObj;
+        }
+      });
     });
+
+    bb.on('close', () => resolve({ fields, files }));
+    bb.on('error', (err) => reject(err));
+
+    req.pipe(bb);
   });
 }
 
-// ── Upload a single file buffer to Supabase Storage ──
-async function uploadFileToSupabase(filePath, storagePath, mimeType) {
-  const buffer = fs.readFileSync(filePath);
+// ── Upload a file buffer to Supabase Storage ──
+async function uploadFileToSupabase(fileObj, storagePath, mimeType) {
+  const buffer = fileObj._buffer;
   const { data, error } = await supabase.storage
     .from('client-assets')
     .upload(storagePath, buffer, {
@@ -83,7 +110,6 @@ async function uploadFileToSupabase(filePath, storagePath, mimeType) {
       upsert: false,
     });
   if (error) throw error;
-  // Get public URL
   const { data: urlData } = supabase.storage
     .from('client-assets')
     .getPublicUrl(storagePath);
@@ -137,10 +163,10 @@ module.exports = async (req, res) => {
     const logoFile = files.logoFile;
     if (logoFile) {
       const f = Array.isArray(logoFile) ? logoFile[0] : logoFile;
-      if (f && f.filepath) {
-        const ext = path.extname(f.originalFilename || f.newFilename || 'logo');
+      if (f && f._buffer && f._buffer.length > 0) {
+        const ext = path.extname(f.originalFilename || 'logo') || '.png';
         logoFileUrl = await uploadFileToSupabase(
-          f.filepath,
+          f,
           `${folder}/logo${ext}`,
           f.mimetype
         );
@@ -153,17 +179,16 @@ module.exports = async (req, res) => {
   // ── Upload photo files ──
   const photoFileUrls = [];
   try {
-    // Photos can come as photosFiles (multiple) or photoFile_0, photoFile_1, etc.
     const photoKeys = Object.keys(files).filter(k => k === 'photosFiles' || k.startsWith('photoFile_'));
     for (const key of photoKeys) {
       const fileOrFiles = files[key];
       const fileList = Array.isArray(fileOrFiles) ? fileOrFiles : [fileOrFiles];
       for (let i = 0; i < fileList.length; i++) {
         const f = fileList[i];
-        if (f && f.filepath) {
-          const ext = path.extname(f.originalFilename || f.newFilename || 'photo.jpg');
+        if (f && f._buffer && f._buffer.length > 0) {
+          const ext = path.extname(f.originalFilename || 'photo.jpg') || '.jpg';
           const url = await uploadFileToSupabase(
-            f.filepath,
+            f,
             `${folder}/photo-${photoFileUrls.length}${ext}`,
             f.mimetype
           );
@@ -224,7 +249,7 @@ module.exports = async (req, res) => {
     social: socialsArr,
     notes: additionalInfo || '',
     assets: {
-      briefUrl: '',      // filled in after upload
+      briefUrl: '',
       logoUrl: logoFileUrl,
       photoUrls: photoFileUrls,
     },
@@ -248,7 +273,6 @@ module.exports = async (req, res) => {
       .from('client-assets')
       .getPublicUrl(briefStoragePath);
     buildBriefUrl = briefUrlData.publicUrl;
-    // Patch brief with its own URL
     brief.assets.briefUrl = buildBriefUrl;
   } catch (briefErr) {
     console.error('Brief upload error:', briefErr.message);
@@ -299,7 +323,6 @@ module.exports = async (req, res) => {
 
   // 2. Send build brief to Roger
   try {
-    // Enrich clientData with parsed arrays and brief URL for the email template
     const enrichedData = {
       ...clientData,
       socialsArr,

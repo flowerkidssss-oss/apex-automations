@@ -8,22 +8,17 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 // Plan definitions — must match frontend
 // ─────────────────────────────────────────────
 const PLANS = {
-  'automation':  { name: 'Automation System',        setupCents: 29900,  monthlyCents: 29700, yearlyMonthlyCents: 22300 },
-  'scheduling':  { name: 'Scheduling System',         setupCents: 49900,  monthlyCents: 19700, yearlyMonthlyCents: 14800 },
-  'website':     { name: 'Website Build',             setupCents: 120000, monthlyCents: 0,     yearlyMonthlyCents: 0,    isOneTime: true },
-  'bundle-as':   { name: 'Automation + Scheduling',   setupCents: 69900,  monthlyCents: 34700, yearlyMonthlyCents: 26000 },
-  'bundle-aw':   { name: 'Automation + Website',      setupCents: 139900, monthlyCents: 29700, yearlyMonthlyCents: 22300 },
-  'bundle-full': { name: 'Full Stack Bundle',         setupCents: 179900, monthlyCents: 44700, yearlyMonthlyCents: 33500 },
+  'starter': { name: 'Starter',  setupCents: 0, monthlyCents: 39700, yearlyMonthlyCents: 31800 },
+  'growth':  { name: 'Growth',   setupCents: 0, monthlyCents: 59700, yearlyMonthlyCents: 47800 },
+  'pro':     { name: 'Pro',      setupCents: 0, monthlyCents: 99700, yearlyMonthlyCents: 79800 },
 };
 
 // ─────────────────────────────────────────────
 // Discount codes
 // ─────────────────────────────────────────────
 const CODES = {
-  'NOSETUP':    { type: 'waive_setup',    excludePlans: ['bundle-aw', 'bundle-full'] },
-  'HALFOFF':    { type: 'half_first',     excludeOneTime: true },
-  'YEARLY10':   { type: 'yearly10',       requiresYearly: true },
-  'STACKSETUP': { type: 'stack_setup30',  onlyPlans: ['bundle-aw', 'bundle-full'] },
+  'HALFOFF':  { type: 'half_first', excludeOneTime: false },
+  'YEARLY10': { type: 'yearly10',   requiresYearly: true },
 };
 
 // ─────────────────────────────────────────────
@@ -31,60 +26,28 @@ const CODES = {
 // Returns { setupCents, firstChargeCents, recurringCents, discountApplied }
 // ─────────────────────────────────────────────
 function applyDiscount(plan, selectedPlan, billing, discountCode) {
-  let setup = selectedPlan.setupCents;
   const isYearly = billing === 'yearly';
-  const isOneTime = !!selectedPlan.isOneTime;
-
   const code = discountCode ? CODES[discountCode.toUpperCase()] : null;
   let discountApplied = null;
 
   if (code) {
-    const { type, excludePlans, excludeOneTime, requiresYearly, onlyPlans } = code;
-
-    const planExcluded = excludePlans && excludePlans.includes(plan);
-    const oneTimeExcluded = excludeOneTime && isOneTime;
+    const { type, requiresYearly } = code;
     const yearlyRequired = requiresYearly && !isYearly;
-    const notInOnlyPlans = onlyPlans && !onlyPlans.includes(plan);
-
-    const valid = !planExcluded && !oneTimeExcluded && !yearlyRequired && !notInOnlyPlans;
-
-    if (valid) {
-      if (type === 'waive_setup') {
-        setup = 0;
-        discountApplied = 'waive_setup';
-      } else if (type === 'stack_setup30') {
-        setup = Math.round(setup * 0.70);
-        discountApplied = 'stack_setup30';
-      } else if (type === 'half_first' && !isYearly && !isOneTime) {
-        // Applied at charge time below
-        discountApplied = 'half_first';
-      } else if (type === 'yearly10' && isYearly) {
-        discountApplied = 'yearly10';
-      }
+    if (!yearlyRequired) {
+      if (type === 'half_first' && !isYearly) discountApplied = 'half_first';
+      if (type === 'yearly10' && isYearly) discountApplied = 'yearly10';
     }
-  }
-
-  if (isOneTime) {
-    return { setup, firstChargeCents: setup, recurringCents: 0, discountApplied };
   }
 
   if (isYearly) {
     let annualRecurring = selectedPlan.yearlyMonthlyCents * 12;
-    if (discountApplied === 'yearly10') {
-      annualRecurring = Math.round(annualRecurring * 0.90);
-    }
-    // Yearly: charge setup + full year upfront
-    const firstChargeCents = setup + annualRecurring;
-    return { setup, firstChargeCents, recurringCents: annualRecurring, discountApplied };
+    if (discountApplied === 'yearly10') annualRecurring = Math.round(annualRecurring * 0.90);
+    return { setup: 0, firstChargeCents: annualRecurring, recurringCents: annualRecurring, discountApplied };
   }
 
-  // Monthly: first month may be half off
   let firstMonth = selectedPlan.monthlyCents;
-  if (discountApplied === 'half_first') {
-    firstMonth = Math.round(firstMonth * 0.50);
-  }
-  const firstChargeCents = setup + firstMonth;
-  return { setup, firstChargeCents, recurringCents: selectedPlan.monthlyCents, discountApplied };
+  if (discountApplied === 'half_first') firstMonth = Math.round(firstMonth * 0.50);
+  return { setup: 0, firstChargeCents: firstMonth, recurringCents: selectedPlan.monthlyCents, discountApplied };
 }
 
 // ─────────────────────────────────────────────
@@ -117,7 +80,6 @@ module.exports = async (req, res) => {
 
   const { setup, firstChargeCents, recurringCents, discountApplied } = applyDiscount(plan, selectedPlan, billing, discountCode);
   const isYearly = billing === 'yearly';
-  const isOneTime = !!selectedPlan.isOneTime;
 
   try {
     // 1. Create Stripe customer
@@ -130,7 +92,7 @@ module.exports = async (req, res) => {
       metadata: { business, plan, billing },
     });
 
-    // 2. Charge upfront amount (setup + first month/year)
+    // 2. Charge first period upfront
     const paymentIntent = await stripe.paymentIntents.create({
       amount: firstChargeCents,
       currency: 'usd',
@@ -181,8 +143,8 @@ module.exports = async (req, res) => {
       console.error('Resend email error (non-fatal):', emailErr.message);
     }
 
-    // 4. Create recurring subscription (skip for one-time / website plan)
-    if (!isOneTime && recurringCents > 0) {
+    // 4. Create recurring subscription
+    if (recurringCents > 0) {
       const interval = isYearly ? 'year' : 'month';
       const intervalLabel = isYearly ? 'Annual' : 'Monthly';
 
